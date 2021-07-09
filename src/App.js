@@ -22,6 +22,25 @@ function testsend(signer) {
     .broadcast(); 
 };
 
+function testinvoke(signer) {
+  return signer
+    .invoke({
+  dApp: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU',
+  payment: [{
+    assetId: null,
+    amount: 123456,
+  }],
+  call: {
+    function: 'tellme',
+    args: [{
+      type: 'string',
+      value: 'Some text',
+    }],
+  }
+})
+    .broadcast();
+};
+
 function App() {
   return (
     <div className="TestApp">
@@ -34,6 +53,9 @@ function App() {
       <div>
         <button onClick={() => testsend(signerWeb)}>TRANSFER</button>
       </div>
+      <div>
+        <button onClick={() => testinvoke(signerWeb)}>INVOKE</button>
+      </div>
     </div>
     <div>
     <h3>Provider-Cloud</h3>
@@ -43,6 +65,9 @@ function App() {
       </div>
       <div>
         <button onClick={() => testsend(signerCloud)}>TRANSFER</button>
+      </div>
+      <div>
+        <button onClick={() => testinvoke(signerCloud)}>INVOKE</button>
       </div>
     </div>
     </div>

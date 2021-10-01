@@ -24,7 +24,13 @@ function testsend(signer) {
 
 function testsend_waves(signer) {
   return signer
-    .transfer({assetId: 'WAVES', amount: 101, recipient: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU'})
+    .transfer({ 
+      assetId: 'WAVES', 
+      amount: 101, 
+      recipient: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU',
+      fee: 100001,
+      feeAssetId: 'WAVES'
+    })
     .broadcast(); 
 };
 
@@ -54,6 +60,8 @@ function testinvoke_waves(signer) {
   return signer
     .invoke({
   dApp: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU',
+  fee: 500001,
+  feeAssetId: 'WAVES',
   payment: [
     {assetId: 'WAVES', amount: 12345 },
     {assetId: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT', amount: 123 },

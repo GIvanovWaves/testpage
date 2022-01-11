@@ -27,7 +27,7 @@ function testsend_waves(signer) {
     .transfer({ 
       assetId: 'WAVES', 
       amount: 101, 
-      recipient: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU',
+      recipient: '3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh',
       fee: 100001,
       feeAssetId: 'WAVES'
     })
@@ -37,7 +37,7 @@ function testsend_waves(signer) {
 function testinvoke(signer) {
   return signer
     .invoke({
-  dApp: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU',
+  dApp: '3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh',
   payment: [
     {assetId: null, amount: 12345 },
     {assetId: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT', amount: 123 },
@@ -46,10 +46,10 @@ function testinvoke(signer) {
     {assetId: 'EmcmfM27TPaemhuREZGD8WLvsuLCdqx8WovMrDQKbXS1', amount: 456 },
   ],
   call: {
-    function: 'tellme',
+    function: 'foo',
     args: [{
       type: 'string',
-      value: 'Some text',
+      value: 'Hello, world!',
     }],
   }
 })
@@ -59,7 +59,7 @@ function testinvoke(signer) {
 function testinvoke_waves(signer) {
   return signer
     .invoke({
-  dApp: '3N27HUMt4ddx2X7foQwZRmpFzg5PSzLrUgU',
+  dApp: '3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh',
   fee: 500001,
   feeAssetId: 'WAVES',
   payment: [
@@ -68,10 +68,10 @@ function testinvoke_waves(signer) {
     {assetId: '5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX', amount: 234 }
   ],
   call: {
-    function: 'tellme',
+    function: 'foo',
     args: [{
       type: 'string',
-      value: 'Some text',
+      value: 'Hello, world!',
     }],
   }
 })

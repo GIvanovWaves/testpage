@@ -5,12 +5,12 @@ import { ProviderCloud } from '@waves.exchange/provider-cloud';
 const signerWeb = new Signer({
   NODE_URL: 'https://nodes-testnet.wavesnodes.com'
 });
-signerWeb.setProvider(new ProviderWeb('https://testnet.waves.exchange/signer/'));
+signerWeb.setProvider(new ProviderWeb('https://wallet-stage1.waves.exchange/signer/'));
 
 const signerCloud = new Signer({
   NODE_URL: 'https://nodes-testnet.wavesnodes.com'
 });
-signerCloud.setProvider(new ProviderCloud('https://testnet.waves.exchange/signer-cloud/'));
+signerCloud.setProvider(new ProviderCloud('https://wallet-stage1.waves.exchange/signer-cloud/'));
 
 function testlogin(signer) {
   return signer.login();
@@ -83,7 +83,7 @@ function App() {
     <div className="Signer examples">
     <div>
     <h3>Provider-Web</h3>
-    <div>https://testnet.waves.exchange/signer</div>
+    <div>https://wallet-stage1.waves.exchange/signer</div>
       <div>
         <button onClick={() => testlogin(signerWeb)}>LOGIN</button>
       </div>
@@ -102,7 +102,7 @@ function App() {
     </div>
     <div>
     <h3>Provider-Cloud</h3>
-    <div>https://testnet.waves.exchange/signer-cloud</div>
+    <div>https://wallet-stage1.waves.exchange/signer-cloud</div>
       <div>
         <button onClick={() => testlogin(signerCloud)}>LOGIN</button>
       </div>

@@ -1,16 +1,35 @@
+import React from 'react';
 import { Signer } from '@waves/signer';
 import { ProviderWeb } from '@waves.exchange/provider-web';
 import { ProviderCloud } from '@waves.exchange/provider-cloud';
 
-const signerWeb = new Signer({
-  NODE_URL: 'https://nodes-testnet.wavesnodes.com'
-});
-signerWeb.setProvider(new ProviderWeb('https://wallet-stage1.waves.exchange/signer/'));
+var config =  {
+  wxUrl: 'https://wallet-stage2.waves.exchange',
+  nodeUrl: 'https://nodes-testnet.wavesnodes.com',
+};
 
-const signerCloud = new Signer({
-  NODE_URL: 'https://nodes-testnet.wavesnodes.com'
+var currentProviderWeb = new ProviderWeb(config.wxUrl + '/signer/');
+var currentProviderCloud = new ProviderCloud(config.wxUrl + '/signer-cloud/');
+
+var signerWeb = new Signer({
+  NODE_URL: config.nodeUrl
 });
-signerCloud.setProvider(new ProviderCloud('https://wallet-stage1.waves.exchange/signer-cloud/'));
+signerWeb.setProvider(currentProviderWeb);
+
+var signerCloud = new Signer({
+  NODE_URL: config.nodeUrl
+});
+signerCloud.setProvider(currentProviderCloud);
+
+
+function changeProviderUrl(wxUrl, nodeUrl) {
+  config.wxUrl = wxUrl;
+  config.nodeUrl = nodeUrl;
+  currentProviderWeb = new ProviderWeb(wxUrl + '/signer');
+  currentProviderCloud = new ProviderCloud(wxUrl + '/signer-cloud/');
+  signerWeb.setProvider(currentProviderWeb);
+  signerCloud.setProvider(currentProviderCloud);
+};
 
 function testlogin(signer) {
   return signer.login();
@@ -78,49 +97,177 @@ function testinvoke_waves(signer) {
     .broadcast();
 };
 
+class SignerLoginElement extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      address: ''
+    };
+
+    this.login = this.login.bind(this);
+  }
+
+  login() {
+    var signer = '';
+
+    if(this.props.provider ==='WEB')
+      signer = signerWeb;
+    if(this.props.provider === 'CLOUD')
+      signer = signerCloud;
+
+    if(signer !== '') {
+      testlogin(signer).then((res, rej) => {
+        this.setState({address: res.address});
+      });      
+    }
+  }
+
+  render() { return (
+    <div>
+      <h4>Provider {this.props.provider}</h4>
+      <div>Address: {this.state.address}</div>
+      <button onClick={this.login}>Login {this.props.provider}</button>
+    </div>
+  )}
+}
+
+
+class TestButtonsComponent extends React.Component {
+  render() {
+    return (
+    <div>
+      <SignButtonComponent
+        signer={this.props.signer}
+        buttonName='Transfer'
+        testFunction={testsend}
+       />
+
+      <SignButtonComponent
+        signer={this.props.signer}
+        buttonName='Transfer with WAVES as AssetID'
+        testFunction={testsend_waves}
+       />
+
+      <SignButtonComponent
+        signer={this.props.signer}
+        buttonName='Invoke'
+        testFunction={testinvoke}
+       />
+ 
+       <SignButtonComponent
+        signer={this.props.signer}
+        buttonName='Invoke with WAVES as AssetID'
+        testFunction={testinvoke_waves}
+       />
+    </div>
+  )}
+}
+
+class SignButtonComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: ''
+    };
+
+    this.clickHandle = this.clickHandle.bind(this);
+  };
+
+  clickHandle() {
+    return this.props.testFunction(this.props.signer)
+    .catch((rej) => {
+      this.setState({status: rej.message.toString()})
+    })
+    .then((res, rej) => {
+      if(res)
+        this.setState({status: res.id})
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.clickHandle}>{this.props.buttonName}</button>
+        <div>{this.state.status}</div>
+      </div>
+    )
+  }
+}
+
+class ConfigElement extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      wxUrl: config.wxUrl,
+      nodeUrl: config.nodeUrl,
+      currentWxUrl: config.wxUrl,
+      currentNodeUrl: config.nodeUrl
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.setProviders = this.setProviders.bind(this);
+  };
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+  setProviders(event) {
+    changeProviderUrl(this.state.wxUrl, this.state.nodeUrl);
+    this.setState({currentWxUrl: this.state.wxUrl});
+    this.setState({currentNodeUrl: this.state.nodeUrl});
+  }
+ 
+  render() {return (
+  <div>
+    <h4>Current WX: {this.state.currentWxUrl}</h4>
+    <h4>Current Node: {this.state.currentNodeUrl}</h4>
+    <div>WX URL:
+      <input 
+        name='wxUrl'
+        type='text' 
+        style={{width: 300}}
+        value={this.state.wxUrl}
+        onChange={this.handleChange} 
+      />
+    </div>
+    <div>NODE URL:
+      <input 
+        name='nodeUrl'
+        type='text' 
+        style={{width: 300}}
+        value={this.state.nodeUrl}
+        onChange={this.handleChange}
+        />
+    </div>
+    <button onClick={this.setProviders}>Set</button>
+  </div>
+  )}
+};
+
 function App() {
   return (
-    <div className="Signer examples">
     <div>
-    <h3>Provider-Web</h3>
-    <div>https://wallet-stage1.waves.exchange/signer</div>
-      <div>
-        <button onClick={() => testlogin(signerWeb)}>LOGIN</button>
-      </div>
-      <div>
-        <button onClick={() => testsend(signerWeb)}>TRANSFER</button>
-      </div>
-      <div>
-        <button onClick={() => testinvoke(signerWeb)}>INVOKE</button>
-      </div>
-      <div>
-        <button onClick={() => testsend_waves(signerWeb)}>TRANSFER (WAVES as id)</button>
-      </div>
-      <div>
-        <button onClick={() => testinvoke_waves(signerWeb)}>INVOKE (WAVES is id)</button>
-      </div>
+      <ConfigElement config={config} />
+      <br></br>
+      <SignerLoginElement provider='WEB' />
+      <br></br> 
+      <TestButtonsComponent
+        signer={signerWeb}
+      />
+      <SignerLoginElement provider='CLOUD' />
+      <br></br>
+      <TestButtonsComponent
+        signer={signerCloud}
+      />
     </div>
-    <div>
-    <h3>Provider-Cloud</h3>
-    <div>https://wallet-stage1.waves.exchange/signer-cloud</div>
-      <div>
-        <button onClick={() => testlogin(signerCloud)}>LOGIN</button>
-      </div>
-      <div>
-        <button onClick={() => testsend(signerCloud)}>TRANSFER</button>
-      </div>
-      <div>
-        <button onClick={() => testinvoke(signerCloud)}>INVOKE</button>
-      </div>
-      <div>
-        <button onClick={() => testsend_waves(signerCloud)}>TRANSFER (WAVES as id)</button>
-      </div>
-      <div>
-        <button onClick={() => testinvoke_waves(signerCloud)}>INVOKE (WAVES is id)</button>
-      </div>
-    </div>
-    </div>
-  );
+  )
 }
 
 export default App;

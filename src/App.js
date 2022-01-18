@@ -41,6 +41,15 @@ function testsend(signer) {
     .broadcast(); 
 };
 
+function testsend_btc(signer) {
+  return signer
+    .transfer({
+      amount: 1,
+      assetId: 'DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn', 
+      recipient: '3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh'})
+    .broadcast(); 
+};
+
 function testsend_waves(signer) {
   return signer
     .transfer({ 
@@ -97,6 +106,21 @@ function testinvoke_waves(signer) {
     .broadcast();
 };
 
+function testsimpleinvoke(signer) {
+  return signer
+    .invoke({
+  dApp: '3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh',
+  call: {
+    function: 'foo',
+    args: [{
+      type: 'string',
+      value: 'Hello, world!',
+    }],
+  }
+})
+    .broadcast();
+};
+
 class SignerLoginElement extends React.Component {
   constructor(props) {
     super(props);
@@ -141,6 +165,12 @@ class TestButtonsComponent extends React.Component {
         buttonName='Transfer'
         testFunction={testsend}
        />
+      
+      <SignButtonComponent
+        signer={this.props.signer}
+        buttonName='Transfer BTC'
+        testFunction={testsend_btc}
+       />
 
       <SignButtonComponent
         signer={this.props.signer}
@@ -158,6 +188,12 @@ class TestButtonsComponent extends React.Component {
         signer={this.props.signer}
         buttonName='Invoke with WAVES as AssetID'
         testFunction={testinvoke_waves}
+       />
+
+       <SignButtonComponent
+        signer={this.props.signer}
+        buttonName='Invoke without payments'
+        testFunction={testsimpleinvoke}
        />
     </div>
   )}

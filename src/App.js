@@ -67,11 +67,11 @@ function testinvoke(signer) {
     .invoke({
   dApp: '3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh',
   payment: [
-    {assetId: null, amount: 12345 },
-    {assetId: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT', amount: 123 },
-    {assetId: '5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX', amount: 234 },
-    {assetId: 'DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn', amount: 345 },
-    {assetId: 'EmcmfM27TPaemhuREZGD8WLvsuLCdqx8WovMrDQKbXS1', amount: 456 },
+    {assetId: null, amount: 5 },
+    {assetId: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT', amount: 4 },
+    {assetId: '5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX', amount: 3 },
+    {assetId: 'DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn', amount: 2 },
+    {assetId: 'EmcmfM27TPaemhuREZGD8WLvsuLCdqx8WovMrDQKbXS1', amount: 1 },
   ],
   call: {
     function: 'foo',
@@ -91,9 +91,9 @@ function testinvoke_waves(signer) {
   fee: 500001,
   feeAssetId: 'WAVES',
   payment: [
-    {assetId: 'WAVES', amount: 12345 },
-    {assetId: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT', amount: 123 },
-    {assetId: '5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX', amount: 234 }
+    {assetId: 'WAVES', amount: 1 },
+    {assetId: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT', amount: 2 },
+    {assetId: '5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX', amount: 3 }
   ],
   call: {
     function: 'foo',

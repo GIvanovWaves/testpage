@@ -337,11 +337,11 @@ class ConfigElement extends React.Component {
 function App() {
   return (
     <div>
-      <ConfigElement config={config} /> <br> </br>{" "}
+      <ConfigElement config={config} />{" "}
       <SignerLoginElement provider="WEB" />
-      <br> </br> <TestButtonsComponent signer={signerWeb} />{" "}
+      <TestButtonsComponent signer={signerWeb} />{" "}
       <SignerLoginElement provider="CLOUD" />
-      <br> </br> <TestButtonsComponent signer={signerCloud} />{" "}
+      <TestButtonsComponent signer={signerCloud} />{" "}
     </div>
   );
 }

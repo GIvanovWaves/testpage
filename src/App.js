@@ -2,6 +2,7 @@ import React from "react";
 import { Signer } from "@waves/signer";
 import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
+import { ProviderKeeper } from "@waves/provider-keeper";
 
 var config = {
   wxUrl: "https://wallet-stage2.waves.exchange",
@@ -10,16 +11,23 @@ var config = {
 
 var currentProviderWeb = new ProviderWeb(config.wxUrl + "/signer/");
 var currentProviderCloud = new ProviderCloud(config.wxUrl + "/signer-cloud/");
+var currentProviderKeeper = new ProviderKeeper();
 
 var signerWeb = new Signer({
   NODE_URL: config.nodeUrl,
 });
-signerWeb.setProvider(currentProviderWeb);
 
 var signerCloud = new Signer({
   NODE_URL: config.nodeUrl,
 });
+
+var signerKeeper = new Signer({
+  NODE_URL: config.nodeUrl,
+});
+
+signerWeb.setProvider(currentProviderWeb);
 signerCloud.setProvider(currentProviderCloud);
+signerKeeper.setProvider(currentProviderKeeper);
 
 function changeProviderUrl(wxUrl, nodeUrl) {
   config.wxUrl = wxUrl;
@@ -28,6 +36,7 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderCloud = new ProviderCloud(wxUrl + "/signer-cloud/");
   signerWeb.setProvider(currentProviderWeb);
   signerCloud.setProvider(currentProviderCloud);
+  signerKeeper.setProvider(currentProviderKeeper);
 }
 
 function testlogin(signer) {
@@ -165,10 +174,7 @@ class SignerLoginElement extends React.Component {
   }
 
   login() {
-    var signer = "";
-
-    if (this.props.provider === "WEB") signer = signerWeb;
-    if (this.props.provider === "CLOUD") signer = signerCloud;
+    var signer = this.props.signer;
 
     if (signer !== "") {
       testlogin(signer).then((res, rej) => {
@@ -248,10 +254,22 @@ class SignButtonComponent extends React.Component {
         });
       })
       .then((res, rej) => {
-        if (res)
-          this.setState({
-            status: res.id,
-          });
+        if (res) {
+          if (Array.isArray(res)) {
+            var ids = "";
+            for (var tx of res) {
+              ids = tx.id.toString() + " ";
+              this.setState({
+                status: ids,
+              }) ;
+            }
+
+          } else {
+            this.setState({
+              status: res.id.toString(),
+            });                      
+          }
+        }
       });
   }
 
@@ -338,10 +356,18 @@ function App() {
   return (
     <div>
       <ConfigElement config={config} />{" "}
-      <SignerLoginElement provider="WEB" />
+      <br />
+      <SignerLoginElement provider="WEB" signer={signerWeb}/>
+      <br />
       <TestButtonsComponent signer={signerWeb} />{" "}
-      <SignerLoginElement provider="CLOUD" />
+      <br />
+      <SignerLoginElement provider="CLOUD" signer={signerCloud}/>
+      <br />
       <TestButtonsComponent signer={signerCloud} />{" "}
+      <br />
+      <SignerLoginElement provider="KEEPER" signer={signerKeeper}/>
+      <br />
+      <TestButtonsComponent signer={signerKeeper} />{" "}
     </div>
   );
 }

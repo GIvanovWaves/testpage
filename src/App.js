@@ -3,6 +3,7 @@ import { Signer } from "@waves/signer";
 import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
+import { ProviderLedger } from "@waves/provider-ledger";
 
 var config = {
   wxUrl: "https://wallet-stage2.waves.exchange",
@@ -12,6 +13,7 @@ var config = {
 var currentProviderWeb = new ProviderWeb(config.wxUrl + "/signer/");
 var currentProviderCloud = new ProviderCloud(config.wxUrl + "/signer-cloud/");
 var currentProviderKeeper = new ProviderKeeper();
+var currentProviderLedger = new ProviderLedger();
 
 var signerWeb = new Signer({
   NODE_URL: config.nodeUrl,
@@ -25,9 +27,14 @@ var signerKeeper = new Signer({
   NODE_URL: config.nodeUrl,
 });
 
+var signerLedger = new Signer({
+  NODE_URL: config.nodeUrl,
+});
+
 signerWeb.setProvider(currentProviderWeb);
 signerCloud.setProvider(currentProviderCloud);
 signerKeeper.setProvider(currentProviderKeeper);
+signerLedger.setProvider(currentProviderLedger);
 
 function changeProviderUrl(wxUrl, nodeUrl) {
   config.wxUrl = wxUrl;
@@ -37,6 +44,7 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   signerWeb.setProvider(currentProviderWeb);
   signerCloud.setProvider(currentProviderCloud);
   signerKeeper.setProvider(currentProviderKeeper);
+  signerLedger.setProvider(currentProviderLedger);
 }
 
 function testlogin(signer) {
@@ -368,6 +376,10 @@ function App() {
       <SignerLoginElement provider="KEEPER" signer={signerKeeper}/>
       <br />
       <TestButtonsComponent signer={signerKeeper} />{" "}
+      <br />
+      <SignerLoginElement provider="LEDGER" signer={signerLedger}/>
+      <br />
+      <TestButtonsComponent signer={signerLedger} />{" "}
     </div>
   );
 }

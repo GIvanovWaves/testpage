@@ -183,7 +183,6 @@ class SignerLoginElement extends React.Component {
 
   login() {
     var signer = this.props.signer;
-
     if (signer !== "") {
       testlogin(signer).then((res, rej) => {
         this.setState({
@@ -263,19 +262,19 @@ class SignButtonComponent extends React.Component {
       })
       .then((res, rej) => {
         if (res) {
+          console.log(res); // For debugging in console
           if (Array.isArray(res)) {
             var ids = "";
             for (var tx of res) {
               ids = tx.id.toString() + " ";
               this.setState({
                 status: ids,
-              }) ;
+              });
             }
-
           } else {
             this.setState({
               status: res.id.toString(),
-            });                      
+            });
           }
         }
       });
@@ -363,21 +362,17 @@ class ConfigElement extends React.Component {
 function App() {
   return (
     <div>
-      <ConfigElement config={config} />{" "}
+      <ConfigElement config={config} /> <br />
+      <SignerLoginElement provider="WEB" signer={signerWeb} />
       <br />
-      <SignerLoginElement provider="WEB" signer={signerWeb}/>
+      <TestButtonsComponent signer={signerWeb} /> <br />
+      <SignerLoginElement provider="CLOUD" signer={signerCloud} />
       <br />
-      <TestButtonsComponent signer={signerWeb} />{" "}
+      <TestButtonsComponent signer={signerCloud} /> <br />
+      <SignerLoginElement provider="KEEPER" signer={signerKeeper} />
       <br />
-      <SignerLoginElement provider="CLOUD" signer={signerCloud}/>
-      <br />
-      <TestButtonsComponent signer={signerCloud} />{" "}
-      <br />
-      <SignerLoginElement provider="KEEPER" signer={signerKeeper}/>
-      <br />
-      <TestButtonsComponent signer={signerKeeper} />{" "}
-      <br />
-      <SignerLoginElement provider="LEDGER" signer={signerLedger}/>
+      <TestButtonsComponent signer={signerKeeper} /> <br />
+      <SignerLoginElement provider="LEDGER" signer={signerLedger} />
       <br />
       <TestButtonsComponent signer={signerLedger} />{" "}
     </div>

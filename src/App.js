@@ -4,6 +4,7 @@ import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";
+import { ProviderMetamask} from "@waves/provider-metamask";
 
 var config = {
   wxUrl: "https://testnet.waves.exchange",
@@ -14,11 +15,13 @@ var currentProviderWeb;
 var currentProviderCloud;
 var currentProviderKeeper;
 var currentProviderLedger;
+var currentProviderMetamask;
 
 var signerWeb;
 var signerCloud;
 var signerKeeper;
 var signerLedger;
+var signerMetamask;
 
 changeProviderUrl(config.wxUrl, config.nodeUrl);
 
@@ -30,6 +33,12 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderCloud  = new ProviderCloud(wxUrl + "/signer-cloud");
   currentProviderKeeper = new ProviderKeeper();
   currentProviderLedger = new ProviderLedger();
+  currentProviderMetamask = new ProviderMetamask({
+       wavesConfig: {
+           nodeUrl: config.nodeUrl,
+           chainId: 'S'.charCodeAt(0)
+       }
+  });
 
   signerWeb = new Signer({
     NODE_URL: config.nodeUrl,
@@ -47,10 +56,15 @@ function changeProviderUrl(wxUrl, nodeUrl) {
     NODE_URL: config.nodeUrl,
   });
 
+  signerMetamask = new Signer({
+    NODE_URL: config.nodeUrl,
+  });
+
   signerWeb.setProvider(currentProviderWeb);
   signerCloud.setProvider(currentProviderCloud);
   signerKeeper.setProvider(currentProviderKeeper);
   signerLedger.setProvider(currentProviderLedger);
+  signerMetamask.setProvider(currentProviderMetamask);
 }
 
 function testlogin(signer) {
@@ -204,12 +218,9 @@ class SignerLoginElement extends React.Component {
         <h4> Provider {this.props.provider} </h4>{" "}
         <div> Address: {this.state.address} </div>{" "}
         <div> NODE_URL: {this.props.signer._options.NODE_URL.toString()} </div>{" "}
-        <div>
-          {" "}
-          PROVIDER_URL:{" "}
-          {this.props.signer.currentProvider._clientUrl
-            ? this.props.signer.currentProvider._clientUrl.toString()
-            : ""}{" "}
+        <div> PROVIDER_URL: {
+            this.props.signer.currentProvider._clientUrl ?
+            this.props.signer.currentProvider._clientUrl.toString() : ""}
         </div>{" "}
         <button onClick={this.login}> Login {this.props.provider} </button>{" "}
       </div>
@@ -270,8 +281,10 @@ class SignButtonComponent extends React.Component {
     return this.props
       .testFunction(this.props.signer)
       .catch((rej) => {
+        console.log(rej); // For debugging in console
+
         this.setState({
-          status: rej.message.toString(),
+          status: rej.message ? rej.message.toString() : "undefined",
         });
       })
       .then((res, rej) => {
@@ -384,6 +397,7 @@ class PageComponent extends React.Component {
       signerCloud: signerCloud,
       signerKeeper: signerKeeper,
       signerLedger: signerLedger,
+      signerMetamask: signerMetamask,
     };
 
     this.changeSigner = this.changeSigner.bind(this);
@@ -395,6 +409,7 @@ class PageComponent extends React.Component {
       signerCloud: signerCloud,
       signerKeeper: signerKeeper,
       signerLedger: signerLedger,
+      signerMetamask: signerMetamask,
     });
   }
 
@@ -426,7 +441,13 @@ class PageComponent extends React.Component {
           signer={this.state.signerLedger}
         />
         <br />
-        <TestButtonsComponent signer={this.state.signerLedger} />{" "}
+        <TestButtonsComponent signer={this.state.signerLedger} /> <br />
+        <SignerLoginElement
+          provider="METAMASK"
+          signer={this.state.signerMetamask}
+        />
+        <br />
+        <TestButtonsComponent signer={this.state.signerMetamask} /> <br />
       </div>
     );
   }

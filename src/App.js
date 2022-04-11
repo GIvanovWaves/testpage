@@ -6,41 +6,47 @@ import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";
 
 var config = {
-  wxUrl: "https://wallet-stage2.waves.exchange",
+  wxUrl: "https://testnet.waves.exchange",
   nodeUrl: "https://nodes-testnet.wavesnodes.com",
 };
 
-var currentProviderWeb = new ProviderWeb(config.wxUrl + "/signer/");
-var currentProviderCloud = new ProviderCloud(config.wxUrl + "/signer-cloud/");
-var currentProviderKeeper = new ProviderKeeper();
-var currentProviderLedger = new ProviderLedger();
+var currentProviderWeb;
+var currentProviderCloud;
+var currentProviderKeeper;
+var currentProviderLedger;
 
-var signerWeb = new Signer({
-  NODE_URL: config.nodeUrl,
-});
+var signerWeb;
+var signerCloud;
+var signerKeeper;
+var signerLedger;
 
-var signerCloud = new Signer({
-  NODE_URL: config.nodeUrl,
-});
-
-var signerKeeper = new Signer({
-  NODE_URL: config.nodeUrl,
-});
-
-var signerLedger = new Signer({
-  NODE_URL: config.nodeUrl,
-});
-
-signerWeb.setProvider(currentProviderWeb);
-signerCloud.setProvider(currentProviderCloud);
-signerKeeper.setProvider(currentProviderKeeper);
-signerLedger.setProvider(currentProviderLedger);
+changeProviderUrl(config.wxUrl, config.nodeUrl);
 
 function changeProviderUrl(wxUrl, nodeUrl) {
   config.wxUrl = wxUrl;
   config.nodeUrl = nodeUrl;
-  currentProviderWeb = new ProviderWeb(wxUrl + "/signer");
-  currentProviderCloud = new ProviderCloud(wxUrl + "/signer-cloud/");
+
+  currentProviderWeb    = new ProviderWeb(wxUrl + "/signer");
+  currentProviderCloud  = new ProviderCloud(wxUrl + "/signer-cloud");
+  currentProviderKeeper = new ProviderKeeper();
+  currentProviderLedger = new ProviderLedger();
+
+  signerWeb = new Signer({
+    NODE_URL: config.nodeUrl,
+  });
+
+  signerCloud = new Signer({
+    NODE_URL: config.nodeUrl,
+  });
+
+  signerKeeper = new Signer({
+    NODE_URL: config.nodeUrl,
+  });
+
+  signerLedger = new Signer({
+    NODE_URL: config.nodeUrl,
+  });
+
   signerWeb.setProvider(currentProviderWeb);
   signerCloud.setProvider(currentProviderCloud);
   signerKeeper.setProvider(currentProviderKeeper);
@@ -197,6 +203,14 @@ class SignerLoginElement extends React.Component {
       <div>
         <h4> Provider {this.props.provider} </h4>{" "}
         <div> Address: {this.state.address} </div>{" "}
+        <div> NODE_URL: {this.props.signer._options.NODE_URL.toString()} </div>{" "}
+        <div>
+          {" "}
+          PROVIDER_URL:{" "}
+          {this.props.signer.currentProvider._clientUrl
+            ? this.props.signer.currentProvider._clientUrl.toString()
+            : ""}{" "}
+        </div>{" "}
         <button onClick={this.login}> Login {this.props.provider} </button>{" "}
       </div>
     );
@@ -263,19 +277,19 @@ class SignButtonComponent extends React.Component {
       .then((res, rej) => {
         if (res) {
           console.log(res); // For debugging in console
+
+          var status_text = "";
           if (Array.isArray(res)) {
-            var ids = "";
             for (var tx of res) {
-              ids = tx.id.toString() + " ";
-              this.setState({
-                status: ids,
-              });
+              status_text += tx.id.toString() + "\n";
             }
           } else {
-            this.setState({
-              status: res.id.toString(),
-            });
+            status_text = res.id.toString() + "\n";
           }
+
+          this.setState({
+            status: status_text,
+          });
         }
       });
   }
@@ -316,6 +330,9 @@ class ConfigElement extends React.Component {
 
   setProviders(event) {
     changeProviderUrl(this.state.wxUrl, this.state.nodeUrl);
+
+    this.props.changeSigner();
+
     this.setState({
       currentWxUrl: this.state.wxUrl,
     });
@@ -359,22 +376,66 @@ class ConfigElement extends React.Component {
   }
 }
 
+class PageComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      signerWeb: signerWeb,
+      signerCloud: signerCloud,
+      signerKeeper: signerKeeper,
+      signerLedger: signerLedger,
+    };
+
+    this.changeSigner = this.changeSigner.bind(this);
+  }
+
+  changeSigner(event) {
+    this.setState({
+      signerWeb: signerWeb,
+      signerCloud: signerCloud,
+      signerKeeper: signerKeeper,
+      signerLedger: signerLedger,
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <ConfigElement config={config} changeSigner={this.changeSigner} />{" "}
+        <br />
+        <SignerLoginElement
+          provider="WEB" 
+          signer={this.state.signerWeb}
+        />
+        <br />
+        <TestButtonsComponent signer={this.state.signerWeb} /> <br />
+        <SignerLoginElement 
+          provider="CLOUD" 
+          signer={this.state.signerCloud}
+        />
+        <br />
+        <TestButtonsComponent signer={this.state.signerCloud} /> <br />
+        <SignerLoginElement
+          provider="KEEPER"
+          signer={this.state.signerKeeper}
+        />
+        <br />
+        <TestButtonsComponent signer={this.state.signerKeeper} /> <br />
+        <SignerLoginElement
+          provider="LEDGER"
+          signer={this.state.signerLedger}
+        />
+        <br />
+        <TestButtonsComponent signer={this.state.signerLedger} />{" "}
+      </div>
+    );
+  }
+}
+
 function App() {
   return (
     <div>
-      <ConfigElement config={config} /> <br />
-      <SignerLoginElement provider="WEB" signer={signerWeb} />
-      <br />
-      <TestButtonsComponent signer={signerWeb} /> <br />
-      <SignerLoginElement provider="CLOUD" signer={signerCloud} />
-      <br />
-      <TestButtonsComponent signer={signerCloud} /> <br />
-      <SignerLoginElement provider="KEEPER" signer={signerKeeper} />
-      <br />
-      <TestButtonsComponent signer={signerKeeper} /> <br />
-      <SignerLoginElement provider="LEDGER" signer={signerLedger} />
-      <br />
-      <TestButtonsComponent signer={signerLedger} />{" "}
+      <PageComponent />
     </div>
   );
 }

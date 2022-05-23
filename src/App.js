@@ -36,7 +36,7 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderMetamask = new ProviderMetamask({
        wavesConfig: {
            nodeUrl: config.nodeUrl,
-           chainId: 'S'.charCodeAt(0)
+           chainId: 'T'.charCodeAt(0)
        }
   });
 
@@ -215,14 +215,14 @@ class SignerLoginElement extends React.Component {
   render() {
     return (
       <div>
-        <h4> Provider {this.props.provider} </h4>{" "}
-        <div> Address: {this.state.address} </div>{" "}
-        <div> NODE_URL: {this.props.signer._options.NODE_URL.toString()} </div>{" "}
+        <h4> Provider {this.props.provider} </h4>
+        <div> Address: {this.state.address} </div>
+        <div> NODE_URL: {this.props.signer._options.NODE_URL.toString()} </div>
         <div> PROVIDER_URL: {
             this.props.signer.currentProvider._clientUrl ?
             this.props.signer.currentProvider._clientUrl.toString() : ""}
-        </div>{" "}
-        <button onClick={this.login}> Login {this.props.provider} </button>{" "}
+        </div>
+        <button onClick={this.login}> Login {this.props.provider} </button>
       </div>
     );
   }
@@ -261,7 +261,7 @@ class TestButtonsComponent extends React.Component {
           signer={this.props.signer}
           buttonName="Invoke without payments"
           testFunction={testsimpleinvoke}
-        />{" "}
+        />
       </div>
     );
   }
@@ -284,7 +284,7 @@ class SignButtonComponent extends React.Component {
         console.log(rej); // For debugging in console
 
         this.setState({
-          status: rej.message ? rej.message.toString() : "undefined",
+          status: rej.message ? rej.message.toString() : rej.toString(),
         });
       })
       .then((res, rej) => {
@@ -310,8 +310,8 @@ class SignButtonComponent extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.clickHandle}> {this.props.buttonName} </button>{" "}
-        <div> {this.state.status} </div>{" "}
+        <button onClick={this.clickHandle}> {this.props.buttonName} </button>
+        <div> {this.state.status} </div>
       </div>
     );
   }
@@ -348,17 +348,15 @@ class ConfigElement extends React.Component {
 
     this.setState({
       currentWxUrl: this.state.wxUrl,
-    });
-    this.setState({
-      currentNodeUrl: this.state.nodeUrl,
+      currentNodeUrl: this.state.nodeUrl
     });
   }
 
   render() {
     return (
       <div>
-        <h4> Current WX: {this.state.currentWxUrl} </h4>{" "}
-        <h4> Current Node: {this.state.currentNodeUrl} </h4>{" "}
+        <h4> Current WX: {this.state.currentWxUrl} </h4>
+        <h4> Current Node: {this.state.currentNodeUrl} </h4>
         <div>
           WX URL:
           <input
@@ -369,8 +367,8 @@ class ConfigElement extends React.Component {
             }}
             value={this.state.wxUrl}
             onChange={this.handleChange}
-          />{" "}
-        </div>{" "}
+          />
+        </div>
         <div>
           NODE URL:
           <input
@@ -381,9 +379,9 @@ class ConfigElement extends React.Component {
             }}
             value={this.state.nodeUrl}
             onChange={this.handleChange}
-          />{" "}
-        </div>{" "}
-        <button onClick={this.setProviders}> Set </button>{" "}
+          />
+        </div>
+        <button onClick={this.setProviders}> Set </button>
       </div>
     );
   }
@@ -416,7 +414,7 @@ class PageComponent extends React.Component {
   render() {
     return (
       <div>
-        <ConfigElement config={config} changeSigner={this.changeSigner} />{" "}
+        <ConfigElement config={config} changeSigner={this.changeSigner} />
         <br />
         <SignerLoginElement
           provider="WEB" 

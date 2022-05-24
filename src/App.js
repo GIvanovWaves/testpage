@@ -71,6 +71,16 @@ function testlogin(signer) {
   return signer.login();
 }
 
+function sendToAddress(signer, params) {
+  return signer
+    .transfer({
+      amount: params.amount,
+      recipient: params.address,
+      assetId: params.assetId,
+    })
+    .broadcast();
+}
+
 function testsend(signer) {
   return signer
     .transfer({
@@ -191,6 +201,56 @@ function testsimpleinvoke(signer) {
     .broadcast();
 }
 
+function testInvokeWithPayment(signer) {
+  return signer
+    .invoke({
+      dApp: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+      payment: [
+        {
+          assetId: "WAVES",
+          amount: 1,
+        },
+      ],
+      call: {
+        function: "foo",
+        args: [
+          {
+            type: "string",
+            value: "Hello, world!",
+          },
+        ],
+      },
+    })
+    .broadcast();
+}
+
+function testInvokeWithTwoPayments(signer) {
+  return signer
+    .invoke({
+      dApp: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+      payment: [
+        {
+          assetId: "WAVES",
+          amount: 1,
+        },
+        {
+          assetId: "DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn",
+          amount: 2,
+        },
+      ],
+      call: {
+        function: "foo",
+        args: [
+          {
+            type: "string",
+            value: "Hello, world!",
+          },
+        ],
+      },
+    })
+    .broadcast();
+}
+
 class SignerLoginElement extends React.Component {
   constructor(props) {
     super(props);
@@ -262,6 +322,123 @@ class TestButtonsComponent extends React.Component {
           buttonName="Invoke without payments"
           testFunction={testsimpleinvoke}
         />
+        <br />
+        <SignButtonWithParams
+          signer={this.props.signer}
+          buttonName="TransferTX"
+          testFunction={sendToAddress}
+        />
+        <br />
+        <SignButtonComponent
+          signer={this.props.signer}
+          buttonName="Invoke with 1 payment (WAVES)"
+          testFunction={testInvokeWithPayment}
+        />
+        <SignButtonComponent
+          signer={this.props.signer}
+          buttonName="Invoke with 2 payments (WAVES, BTC)"
+          testFunction={testInvokeWithTwoPayments}
+        />
+      </div>
+    );
+  }
+}
+
+class SignButtonWithParams extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "",
+      amount: "1",
+      address: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+      assetId: "WAVES",
+    }
+
+    this.clickHandle = this.clickHandle.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  clickHandle() {
+    return this.props
+      .testFunction(this.props.signer, {amount: this.state.amount, address: this.state.address, assetId: this.state.assetId})
+      .catch((rej) => {
+        console.log(rej); // For debugging in console
+
+        this.setState({
+          status: rej.message ? rej.message.toString() : rej.toString(),
+        });
+      })
+      .then((res, rej) => {
+        if (res) {
+          console.log(res); // For debugging in console
+
+          var status_text = "";
+          if (Array.isArray(res)) {
+            for (var tx of res) {
+              status_text += tx.id.toString() + "\n";
+            }
+          } else {
+            status_text = res.id.toString() + "\n";
+          }
+
+          this.setState({
+            status: status_text,
+          });
+        }
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          Address:
+          <input
+            name="address"
+            type="text"
+            style={{
+              width: 300,
+            }}
+            value={this.state.address}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div>
+          Amount:
+          <input
+            name="amount"
+            type="text"
+            style={{
+              width: 300,
+            }}
+            value={this.state.amount}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div>
+          AssetId:
+          <input
+            name="assetId"
+            type="text"
+            style={{
+              width: 300,
+            }}
+            value={this.state.assetId}
+            onChange={this.handleChange}
+          />
+        </div>
+        <button onClick={this.clickHandle}> {this.props.buttonName} </button>
+        <div> {this.state.status} </div>
       </div>
     );
   }

@@ -74,9 +74,9 @@ function testlogin(signer) {
 function sendToAddress(signer, params) {
   return signer
     .transfer({
-      amount: params.amount,
+      amount: params.amount || 0,
       recipient: params.address,
-      assetId: params.assetId,
+      assetId: params.assetId || null,
     })
     .broadcast();
 }

@@ -1,6 +1,6 @@
 {
   "name": "testpage",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -11,7 +11,7 @@
     "@waves.exchange/provider-web": "^1.1.3",
     "@waves/provider-keeper": "^0.2.5",
     "@waves/provider-ledger": "^0.1.9",
-    "@waves/provider-metamask": "^1.0.7",
+    "@waves/provider-metamask": "^1.0.8",
     "@waves/signer": "^1.0.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

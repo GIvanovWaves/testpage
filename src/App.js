@@ -82,6 +82,16 @@ function sendToAddress(signer, params) {
     .broadcast();
 }
 
+function invokeWithParams(signer, params) {
+  return signer
+    .invoke({
+      dApp: params.dapp,
+      call: params.call || null,
+      payment: params.payment || null,
+    })
+    .broadcast();
+}
+
 function testsend(signer) {
   return signer
     .transfer({
@@ -340,6 +350,12 @@ class TestButtonsComponent extends React.Component {
           buttonName="Invoke with 2 payments (WAVES, BTC)"
           testFunction={testInvokeWithTwoPayments}
         />
+        <br />
+        <SignInvokeWithParams
+          signer={this.props.signer}
+          buttonName="InvokeTx"
+          testFunction={invokeWithParams}
+        />
       </div>
     );
   }
@@ -465,6 +481,84 @@ class SignTransferWithParams extends SignButtonWithParams {
               width: 300,
             }}
             value={this.state.attachment}
+            onChange={this.handleChange}
+          />
+        </div>
+        <button onClick={this.clickHandle}> {this.props.buttonName} </button>
+        <div> {this.state.status} </div>
+      </div>
+    );
+  }
+}
+
+class SignInvokeWithParams extends SignButtonWithParams {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "",
+      dapp: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+      call: "{\"function\":\"foo\",\n\"args\":[\n{\"type\":\"string\",\"value\":\"Hello,world!\"}\n]}",
+      payment: "[\n{\"assetId\":\"WAVES\",\"amount\":1},\n{\"assetId\":\"DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn\",\"amount\":2}\n]",
+    }
+
+    this.clickHandle = this.clickHandle.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  clickHandle() {
+    let params = {
+        dapp: this.state.dapp,
+        call: JSON.parse(this.state.call),
+        payment: JSON.parse(this.state.payment),
+      };
+
+    return this.callTestFunction(params);
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          dApp:
+          <input
+            name="dapp"
+            type="text"
+            style={{
+              width: 300,
+            }}
+            value={this.state.dapp}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div>
+          Call:
+          <textarea
+            name="call"
+            type="text"
+            style={{
+              "width": "350px",
+              "height": "100px",
+              "overflowWrap": "normal",
+              "overflowX": "scroll",
+              "whiteSpace": "pre",
+            }}
+            value={this.state.call}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div>
+          Payments:
+          <textarea
+            name="payment"
+            type="text"
+            style={{
+              "width": "350px",
+              "height": "100px",
+              "overflowWrap": "normal",
+              "overflowX": "scroll",
+              "whiteSpace": "pre",
+            }}
+            value={this.state.payment}
             onChange={this.handleChange}
           />
         </div>

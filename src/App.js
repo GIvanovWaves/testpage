@@ -324,7 +324,7 @@ class TestButtonsComponent extends React.Component {
           testFunction={testsimpleinvoke}
         />
         <br />
-        <SignButtonWithParams
+        <SignTransferWithParams
           signer={this.props.signer}
           buttonName="TransferTX"
           testFunction={sendToAddress}
@@ -348,16 +348,6 @@ class TestButtonsComponent extends React.Component {
 class SignButtonWithParams extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      status: "",
-      amount: "1",
-      address: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
-      assetId: "WAVES",
-      attachment: "",
-    }
-
-    this.clickHandle = this.clickHandle.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
@@ -370,14 +360,9 @@ class SignButtonWithParams extends React.Component {
     });
   }
 
-  clickHandle() {
+  callTestFunction(params) {
     return this.props
-      .testFunction(this.props.signer, {
-        amount: this.state.amount,
-        address: this.state.address,
-        assetId: this.state.assetId,
-        attachment: this.state.attachment,
-      })
+      .testFunction(this.props.signer, params)
       .catch((rej) => {
         console.log(rej); // For debugging in console
 
@@ -403,6 +388,33 @@ class SignButtonWithParams extends React.Component {
           });
         }
       });
+  }
+}
+
+class SignTransferWithParams extends SignButtonWithParams {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: "",
+      amount: "1",
+      address: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+      assetId: "WAVES",
+      attachment: "",
+    }
+
+    this.clickHandle = this.clickHandle.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  clickHandle() {
+    let params = {
+        amount: this.state.amount,
+        address: this.state.address,
+        assetId: this.state.assetId,
+        attachment: this.state.attachment,
+      };
+
+    return this.callTestFunction(params);
   }
 
   render() {

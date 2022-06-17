@@ -77,6 +77,7 @@ function sendToAddress(signer, params) {
       amount: params.amount || 0,
       recipient: params.address,
       assetId: params.assetId || null,
+      attachment: params.attachment || null,
     })
     .broadcast();
 }
@@ -352,6 +353,7 @@ class SignButtonWithParams extends React.Component {
       amount: "1",
       address: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
       assetId: "WAVES",
+      attachment: "",
     }
 
     this.clickHandle = this.clickHandle.bind(this);
@@ -370,7 +372,12 @@ class SignButtonWithParams extends React.Component {
 
   clickHandle() {
     return this.props
-      .testFunction(this.props.signer, {amount: this.state.amount, address: this.state.address, assetId: this.state.assetId})
+      .testFunction(this.props.signer, {
+        amount: this.state.amount,
+        address: this.state.address,
+        assetId: this.state.assetId,
+        attachment: this.state.attachment,
+      })
       .catch((rej) => {
         console.log(rej); // For debugging in console
 
@@ -434,6 +441,18 @@ class SignButtonWithParams extends React.Component {
               width: 300,
             }}
             value={this.state.assetId}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div>
+          Attachment:
+          <input
+            name="attachment"
+            type="text"
+            style={{
+              width: 300,
+            }}
+            value={this.state.attachment}
             onChange={this.handleChange}
           />
         </div>

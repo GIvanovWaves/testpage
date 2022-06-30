@@ -36,7 +36,7 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderMetamask = new ProviderMetamask({
        wavesConfig: {
            nodeUrl: config.nodeUrl,
-           chainId: 'T'.charCodeAt(0)
+           chainId: config.nodeUrl.includes('testnet') ?'T'.charCodeAt(0) :'W'.charCodeAt(0)
        }
   });
 

@@ -1,12 +1,12 @@
 {
   "name": "testpage",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "private": true,
   "homepage": ".",
   "dependencies": {
     "@waves.exchange/provider-cloud": "1.0.2",
-    "@waves.exchange/provider-web": "1.1.5",
-    "@waves/provider-keeper": "0.2.6",
+    "@waves.exchange/provider-web": "1.1.6",
+    "@waves/provider-keeper": "0.2.7",
     "@waves/provider-ledger": "0.2.0",
     "@waves/provider-metamask": "1.1.4",
     "@waves/signer": "1.0.11",

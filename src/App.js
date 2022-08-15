@@ -5,6 +5,7 @@ import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";
 import { ProviderMetamask} from "@waves/provider-metamask";
+import PackagesFile from './../package.json';
 
 var config = {
   wxUrl: "https://testnet.waves.exchange",
@@ -362,10 +363,6 @@ class TestButtonsComponent extends React.Component {
 }
 
 class SignButtonWithParams extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -688,6 +685,20 @@ class ConfigElement extends React.Component {
     );
   }
 }
+class PackagesComponent extends React.Component {
+  render() {
+    return(
+      <div>
+        <div>@waves/signer: {PackagesFile["dependencies"]["@waves/signer"]}</div>
+        <div>@waves.exchange/provider-web: {PackagesFile["dependencies"]["@waves.exchange/provider-web"]}</div>
+        <div>@waves.exchange/provider-cloud: {PackagesFile["dependencies"]["@waves.exchange/provider-cloud"]}</div>
+        <div>@waves/provider-keeper: {PackagesFile["dependencies"]["@waves/provider-keeper"]}</div>
+        <div>@waves/provider-ledger: {PackagesFile["dependencies"]["@waves/provider-ledger"]}</div>
+        <div>@waves/provider-metamask: {PackagesFile["dependencies"]["@waves.exchange/provider-cloud"]}</div>
+      </div>
+    );
+  }
+}
 
 class PageComponent extends React.Component {
   constructor(props) {
@@ -756,6 +767,7 @@ class PageComponent extends React.Component {
 function App() {
   return (
     <div>
+      <PackagesComponent />
       <PageComponent />
     </div>
   );

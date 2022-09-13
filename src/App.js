@@ -34,12 +34,21 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderCloud  = new ProviderCloud(wxUrl + "/signer-cloud");
   currentProviderKeeper = new ProviderKeeper();
   currentProviderLedger = new ProviderLedger();
-  currentProviderMetamask = new ProviderMetamask({
+  try {
+    currentProviderMetamask = new ProviderMetamask({
        wavesConfig: {
            nodeUrl: config.nodeUrl,
            chainId: config.nodeUrl.includes('testnet') ?'T'.charCodeAt(0) :'W'.charCodeAt(0)
        }
-  });
+    });
+    signerMetamask = new Signer({
+      NODE_URL: config.nodeUrl,
+    });
+    signerMetamask.setProvider(currentProviderMetamask);
+  } catch { 
+    currentProviderMetamask = null;
+    signerMetamask = null;
+   };
 
   signerWeb = new Signer({
     NODE_URL: config.nodeUrl,
@@ -57,15 +66,12 @@ function changeProviderUrl(wxUrl, nodeUrl) {
     NODE_URL: config.nodeUrl,
   });
 
-  signerMetamask = new Signer({
-    NODE_URL: config.nodeUrl,
-  });
+
 
   signerWeb.setProvider(currentProviderWeb);
   signerCloud.setProvider(currentProviderCloud);
   signerKeeper.setProvider(currentProviderKeeper);
   signerLedger.setProvider(currentProviderLedger);
-  signerMetamask.setProvider(currentProviderMetamask);
 }
 
 function testlogin(signer) {
@@ -285,6 +291,9 @@ class SignerLoginElement extends React.Component {
   }
 
   render() {
+    if(this.props.signer == null) {
+      return (<h4>{this.props.provider} not installed</h4> );
+    }
     return (
       <div>
         <h4> Provider {this.props.provider} </h4>
@@ -302,6 +311,9 @@ class SignerLoginElement extends React.Component {
 
 class TestButtonsComponent extends React.Component {
   render() {
+    if(this.props.signer == null) {
+      return;
+    }
     return (
       <div>
         <SignButtonComponent

@@ -5,11 +5,11 @@
   "homepage": ".",
   "dependencies": {
     "@waves.exchange/provider-cloud": "1.0.3",
-    "@waves.exchange/provider-web": "1.1.8",
-    "@waves/provider-keeper": "0.4.1",
-    "@waves/provider-ledger": "0.2.0",
+    "@waves.exchange/provider-web": "1.1.9",
+    "@waves/provider-keeper": "1.0.2",
+    "@waves/provider-ledger": "0.2.1",
     "@waves/provider-metamask": "1.1.4",
-    "@waves/signer": "1.0.11",
+    "@waves/signer": "1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1"

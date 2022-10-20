@@ -8,7 +8,7 @@
     "@waves.exchange/provider-web": "1.1.9",
     "@waves/provider-keeper": "1.0.2",
     "@waves/provider-ledger": "0.2.1",
-    "@waves/provider-metamask": "1.1.4",
+    "@waves/provider-metamask": "1.1.5",
     "@waves/signer": "1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

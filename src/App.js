@@ -706,7 +706,7 @@ class PackagesComponent extends React.Component {
         <div>@waves.exchange/provider-cloud: {PackagesFile["dependencies"]["@waves.exchange/provider-cloud"]}</div>
         <div>@waves/provider-keeper: {PackagesFile["dependencies"]["@waves/provider-keeper"]}</div>
         <div>@waves/provider-ledger: {PackagesFile["dependencies"]["@waves/provider-ledger"]}</div>
-        <div>@waves/provider-metamask: {PackagesFile["dependencies"]["@waves.exchange/provider-cloud"]}</div>
+        <div>@waves/provider-metamask: {PackagesFile["dependencies"]["@waves.exchange/provider-metamask"]}</div>
       </div>
     );
   }

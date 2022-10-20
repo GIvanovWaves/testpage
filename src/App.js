@@ -35,12 +35,7 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderKeeper = new ProviderKeeper();
   currentProviderLedger = new ProviderLedger();
   try {
-    currentProviderMetamask = new ProviderMetamask({
-       wavesConfig: {
-           nodeUrl: config.nodeUrl,
-           chainId: config.nodeUrl.includes('testnet') ?'T'.charCodeAt(0) :'W'.charCodeAt(0)
-       }
-    });
+    currentProviderMetamask = new ProviderMetamask();
     signerMetamask = new Signer({
       NODE_URL: config.nodeUrl,
     });

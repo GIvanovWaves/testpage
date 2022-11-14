@@ -29,9 +29,10 @@ changeProviderUrl(config.wxUrl, config.nodeUrl);
 function changeProviderUrl(wxUrl, nodeUrl) {
   config.wxUrl = wxUrl;
   config.nodeUrl = nodeUrl;
+  var wxUrlObj = new URL(wxUrl);
 
-  currentProviderWeb    = new ProviderWeb(wxUrl + "/signer");
-  currentProviderCloud  = new ProviderCloud(wxUrl + "/signer-cloud");
+  currentProviderWeb    = new ProviderWeb(wxUrlObj.origin + "/signer");
+  currentProviderCloud  = new ProviderCloud(wxUrlObj.origin + "/signer-cloud" + wxUrlObj.search);
   currentProviderKeeper = new ProviderKeeper();
   currentProviderLedger = new ProviderLedger();
   try {

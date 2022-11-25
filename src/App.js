@@ -1,6 +1,6 @@
 import React from "react";
 import { Signer } from "@waves/signer";
-import { ProviderWeb } from "@waves.exchange/provider-web";
+import { ProviderWeb } from "./provider-web/provider-web.cjs";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";
@@ -698,7 +698,7 @@ class PackagesComponent extends React.Component {
     return(
       <div>
         <div>@waves/signer: {PackagesFile["dependencies"]["@waves/signer"]}</div>
-        <div>@waves.exchange/provider-web: {PackagesFile["dependencies"]["@waves.exchange/provider-web"]}</div>
+        <div>@waves.exchange/provider-web: local</div>
         <div>@waves.exchange/provider-cloud: {PackagesFile["dependencies"]["@waves.exchange/provider-cloud"]}</div>
         <div>@waves/provider-keeper: {PackagesFile["dependencies"]["@waves/provider-keeper"]}</div>
         <div>@waves/provider-ledger: {PackagesFile["dependencies"]["@waves/provider-ledger"]}</div>

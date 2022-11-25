@@ -1,6 +1,6 @@
 import React from "react";
 import { Signer } from "@waves/signer";
-import { ProviderWeb } from "./provider-web/provider-web.cjs";
+import { ProviderWeb } from "./tmp/provider-web/provider-web.cjs";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";

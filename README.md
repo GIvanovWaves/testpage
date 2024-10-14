@@ -1,6 +1,9 @@
 # Waves Signer test page
+
 ## Provider-Cloud & Provider-Web for testnet
-https://givanovwaves.github.io/testpage/
+
+<https://givanovwaves.github.io/testpage/>
 
 ### Waves.Exchange Testnet
-https://testnet.waves.exchange
+
+<https://testnet.waves.exchange>

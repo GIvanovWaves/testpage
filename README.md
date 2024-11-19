@@ -7,3 +7,10 @@
 ### Waves.Exchange Testnet
 
 <https://testnet.waves.exchange>
+
+### Build
+
+```sh
+npm i 
+npm run build
+```

@@ -4,11 +4,12 @@ import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";
-import { ProviderMetamask} from "@waves/provider-metamask";
+import { ProviderMetamask } from "@waves/provider-metamask";
+import { ProviderMailbox } from "@waves.exchange/provider-mailbox";
 import PackagesFile from './../package.json';
 
 var config = {
-  wxUrl: "https://testnet.waves.exchange",
+  wxUrl: "https://testnet.wx.network",
   nodeUrl: "https://nodes-testnet.wavesnodes.com",
 };
 
@@ -17,12 +18,14 @@ var currentProviderCloud;
 var currentProviderKeeper;
 var currentProviderLedger;
 var currentProviderMetamask;
+var currentProviderMailbox;
 
 var signerWeb;
 var signerCloud;
 var signerKeeper;
 var signerLedger;
 var signerMetamask;
+var signerMailbox;
 
 changeProviderUrl(config.wxUrl, config.nodeUrl);
 
@@ -35,6 +38,7 @@ function changeProviderUrl(wxUrl, nodeUrl) {
   currentProviderCloud  = new ProviderCloud(wxUrlObj.origin + "/signer-cloud" + wxUrlObj.search);
   currentProviderKeeper = new ProviderKeeper();
   currentProviderLedger = new ProviderLedger();
+  currentProviderMailbox = new ProviderMailbox(wxUrlObj.origin + "/signer-mailbox");
   try {
     currentProviderMetamask = new ProviderMetamask();
     signerMetamask = new Signer({
@@ -62,12 +66,16 @@ function changeProviderUrl(wxUrl, nodeUrl) {
     NODE_URL: config.nodeUrl,
   });
 
+  signerMailbox = new Signer({
+    NODE_URL: config.nodeUrl,
+  });
 
 
   signerWeb.setProvider(currentProviderWeb);
   signerCloud.setProvider(currentProviderCloud);
   signerKeeper.setProvider(currentProviderKeeper);
   signerLedger.setProvider(currentProviderLedger);
+  signerMailbox.setProvider(currentProviderMailbox);
 }
 
 function testlogin(signer) {
@@ -703,6 +711,7 @@ class PackagesComponent extends React.Component {
         <div>@waves/provider-keeper: {PackagesFile["dependencies"]["@waves/provider-keeper"]}</div>
         <div>@waves/provider-ledger: {PackagesFile["dependencies"]["@waves/provider-ledger"]}</div>
         <div>@waves/provider-metamask: {PackagesFile["dependencies"]["@waves/provider-metamask"]}</div>
+        <div>@waves/provider-mailbox: {PackagesFile["dependencies"]["@waves.exchange/provider-mailbox"]}</div>
       </div>
     );
   }
@@ -717,6 +726,7 @@ class PageComponent extends React.Component {
       signerKeeper: signerKeeper,
       signerLedger: signerLedger,
       signerMetamask: signerMetamask,
+      signerMailbox: signerMailbox,
     };
 
     this.changeSigner = this.changeSigner.bind(this);
@@ -729,6 +739,7 @@ class PageComponent extends React.Component {
       signerKeeper: signerKeeper,
       signerLedger: signerLedger,
       signerMetamask: signerMetamask,
+      signerMailbox: signerMailbox,
     });
   }
 
@@ -767,6 +778,12 @@ class PageComponent extends React.Component {
         />
         <br />
         <TestButtonsComponent signer={this.state.signerMetamask} /> <br />
+        <SignerLoginElement
+          provider="MAILBOX"
+          signer={this.state.signerMailbox}
+        />
+        <br />
+        <TestButtonsComponent signer={this.state.signerMailbox} /> <br />
       </div>
     );
   }

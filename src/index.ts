@@ -42,20 +42,52 @@ function initSigners() {
 
     //ProviderWEB
     const signerWeb = new Signer({
-        NODE_URL: CONFIG.nodeUrl
+        NODE_URL: CONFIG.nodeUrl,
     });
     signerWeb.setProvider(new ProviderWeb(wxUrlObj.origin + "/signer"));
     allSigners.push({ signer: signerWeb, name: "WEB" });
 
     //ProviderCLOUD
     const signerCloud = new Signer({
-        NODE_URL: CONFIG.nodeUrl
+        NODE_URL: CONFIG.nodeUrl,
     });
     signerCloud.setProvider(new ProviderCloud(wxUrlObj.origin + "/signer-cloud" + wxUrlObj.search));
     allSigners.push({ signer: signerCloud, name: "CLOUD(EMAIL)" });
 
+    //ProviderKeeper
+    const signerKeeper = new Signer({
+        NODE_URL: CONFIG.nodeUrl,
+    });
+    signerKeeper.setProvider(new ProviderKeeper());
+    allSigners.push({ signer: signerKeeper, name: "KEEPER" });
 
+    //ProviderLedger
+    const signerLedger = new Signer({
+        NODE_URL: CONFIG.nodeUrl,
+    });
+    signerLedger.setProvider(new ProviderLedger());
+    allSigners.push({ signer: signerLedger, name: "LEDGER" });
 
+    //ProviderMetamask
+    const signerMetamask = new Signer({
+        NODE_URL: CONFIG.nodeUrl,
+    })
+    try {
+        const metamaskProvider = new ProviderMetamask();
+        signerMetamask.setProvider(metamaskProvider);
+    } catch {
+        console.error("METAMASK not found");
+    }
+    allSigners.push({ signer: signerMetamask, name: "METAMASK" });
+
+    //ProviderMailbox
+    const signerMailbox = new Signer({
+        NODE_URL: CONFIG.nodeUrl,
+    });
+    signerMailbox.setProvider(new ProviderMailbox(wxUrlObj.origin + "/signer-mailbox"));
+    allSigners.push({ signer: signerMailbox, name: "MAILBOX" });
+
+    //Draw provider blocks
     clearAllSignerBlock();
     for (const signer of allSigners) {
         drawSignerBlock(signer);
@@ -75,6 +107,24 @@ function drawSignerBlock(s: SignerWithName) {
     title.innerText = `Provider ${s.name}`
     block.appendChild(title);
 
+    if (!s.signer.currentProvider) {
+        const err = getDiv();
+        err.style.color = "red";
+        err.innerText = `provider ${s.name} not found`;
+        block.appendChild(err);
+        return
+    }
+
+    const nodeUrl = getDiv();
+    nodeUrl.innerText = `NODE_URL: ${s.signer._options.NODE_URL}`;
+    block.appendChild(nodeUrl);
+
+    if (s.signer && s.signer.currentProvider && s.signer.currentProvider._clientUrl) {
+        const providerUrl = getDiv();
+        providerUrl.innerText = `PROVIDER_URL: ${s.signer.currentProvider._clientUrl}`
+        block.appendChild(providerUrl);
+    }
+
     const loginButton = document.createElement("button") as HTMLButtonElement;
     loginButton.innerText = `Login ${s.name}`;
 
@@ -82,7 +132,7 @@ function drawSignerBlock(s: SignerWithName) {
     var userDataBlock: HTMLDivElement;
 
     loginButton.onclick = () => {
-        if(userDataBlock)
+        if (userDataBlock)
             userDataBlock.remove();
 
         userDataBlock = getDiv();

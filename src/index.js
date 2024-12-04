@@ -136,7 +136,7 @@ function drawSignerBlock(allSignersBlock, s) {
     if (!s.signer.currentProvider) {
         const err = getDiv();
         err.style.color = "red";
-        err.innerText = `provider ${s.name} not found`;
+        err.innerText = `${s.name} not found`;
         block.appendChild(err);
         return;
     }
@@ -189,7 +189,6 @@ function drawSignerBlock(allSignersBlock, s) {
         recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 100001,
         feeAssetId: "WAVES",
-        attachment: "foo bar baz",
     };
     const transferParamsField = document.createElement("textarea");
     transferParamsField.style.width = "300px";

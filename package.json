@@ -13,7 +13,7 @@
     "@waves/signer": "1.1.0"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "tsc & webpack"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

@@ -223,7 +223,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
         amount: 101,
         recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 100001,
-        feeAssetId: "WAVES",
+        feeAssetId: null,
     };
 
     const transferParamsField = document.createElement("textarea");
@@ -243,10 +243,10 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     const invokeDefaultParams: InvokeArgs = {
         dApp: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 500001,
-        feeAssetId: "WAVES",
+        feeAssetId: null,
         payment: [
             {
-                assetId: "WAVES",
+                assetId: null,
                 amount: 1,
             },
             {

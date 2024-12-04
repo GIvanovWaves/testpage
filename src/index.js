@@ -188,7 +188,7 @@ function drawSignerBlock(allSignersBlock, s) {
         amount: 101,
         recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 100001,
-        feeAssetId: "WAVES",
+        feeAssetId: null,
     };
     const transferParamsField = document.createElement("textarea");
     transferParamsField.style.width = "300px";
@@ -204,10 +204,10 @@ function drawSignerBlock(allSignersBlock, s) {
     const invokeDefaultParams = {
         dApp: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 500001,
-        feeAssetId: "WAVES",
+        feeAssetId: null,
         payment: [
             {
-                assetId: "WAVES",
+                assetId: null,
                 amount: 1,
             },
             {

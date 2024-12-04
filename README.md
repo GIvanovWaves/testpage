@@ -1,16 +1,25 @@
 # Waves Signer test page
 
-## Provider-Cloud & Provider-Web for testnet
-
 <https://givanovwaves.github.io/testpage/>
 
-### Waves.Exchange Testnet
+## Supported providers
 
-<https://testnet.waves.exchange>
+- Provider-Web
+- Provider-Cloud (email)
+- Provider-Keeper
+- Provider-Ledger
+- Provider-Metamask
+- Provider-Mailbox
 
-### Build
+## WX.Network Testnet
+
+<https://testnet.wx.network/>
+
+## Build
 
 ```sh
 npm i 
 npm run build
 ```
+
+_Due to CORS restrictions you should use a webserver to serve._

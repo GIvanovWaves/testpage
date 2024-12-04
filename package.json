@@ -1,6 +1,6 @@
 {
   "name": "testpage",
-  "version": "0.3.11",
+  "version": "0.4.11",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -10,33 +10,14 @@
     "@waves/provider-keeper": "1.1.1",
     "@waves/provider-ledger": "0.2.1",
     "@waves/provider-metamask": "1.1.6",
-    "@waves/signer": "1.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
+    "@waves/signer": "1.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "tsc & webpack"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.0",
+    "webpack-cli": "^5.1.4"
   }
 }

@@ -1,4 +1,4 @@
-import { Signer } from "@waves/signer";
+import { InvokeArgs, Signer, TransferArgs } from "@waves/signer";
 import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
@@ -15,6 +15,7 @@ interface SignerWithName {
 const CONFIG = {
     wxUrl: "https://testnet.wx.network",
     nodeUrl: "https://nodes-testnet.wavesnodes.com",
+    keeperNodeUrl: "https://nodes-testnet.wavesnodes.com",
 };
 
 function getDiv(): HTMLDivElement {
@@ -24,16 +25,13 @@ function getDiv(): HTMLDivElement {
 const versionsBlock = getDiv();
 document.body.appendChild(versionsBlock);
 
-const b64string = PackagesFile.toString().substring(29);
-const packages = JSON.parse(atob(b64string));
-
-for (const [k, v] of Object.entries(packages.dependencies)) {
+for (const [k, v] of Object.entries(PackagesFile.dependencies)) {
     const line = getDiv()
     line.innerText = `${k}: ${v}`;
     versionsBlock.appendChild(line);
 }
 
-const allSignersBlock = getDiv();
+var allSignersBlock = getDiv();
 document.body.appendChild(allSignersBlock);
 
 function initSigners() {
@@ -56,7 +54,7 @@ function initSigners() {
 
     //ProviderKeeper
     const signerKeeper = new Signer({
-        NODE_URL: CONFIG.nodeUrl,
+        NODE_URL: CONFIG.keeperNodeUrl,
     });
     signerKeeper.setProvider(new ProviderKeeper());
     allSigners.push({ signer: signerKeeper, name: "KEEPER" });
@@ -90,16 +88,51 @@ function initSigners() {
     //Draw provider blocks
     clearAllSignerBlock();
     for (const signer of allSigners) {
-        drawSignerBlock(signer);
+        drawSignerBlock(allSignersBlock, signer);
     }
 }
 
 function clearAllSignerBlock() {
-    allSignersBlock.childNodes.forEach((child) => child.remove());
-    for (const c of allSignersBlock.children) allSignersBlock.removeChild(c);
+    allSignersBlock.remove();
+    allSignersBlock = getDiv();
+    document.body.appendChild(allSignersBlock);
 }
 
-function drawSignerBlock(s: SignerWithName) {
+function getSignerButton(label: string, callback: () => Promise<any>): HTMLDivElement {
+    const block = getDiv();
+    const button = document.createElement("button") as HTMLButtonElement;
+    button.innerText = label;
+    block.appendChild(button);
+
+    const output = getDiv();
+    block.appendChild(output);
+
+    button.onclick = () => {
+        callback()
+            .then((res) => {
+                output.style.color = "";
+
+                var status_text = "";
+                if (Array.isArray(res)) {
+                    for (var tx of res) {
+                        status_text += tx.id.toString() + "\n";
+                    }
+                } else {
+                    status_text = res.id.toString() + "\n";
+                }
+
+                output.innerText = status_text;
+            })
+            .catch((rej) => {
+                output.style.color = "red";
+                output.innerText = rej.message ? rej.message.toString() : rej.toString();
+            })
+    };
+
+    return block;
+}
+
+function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     const block = getDiv();
     allSignersBlock.appendChild(block);
 
@@ -116,19 +149,25 @@ function drawSignerBlock(s: SignerWithName) {
     }
 
     const nodeUrl = getDiv();
-    nodeUrl.innerText = `NODE_URL: ${s.signer._options.NODE_URL}`;
+    nodeUrl.innerText = `NODE_URL: ${(s.signer as any)._options.NODE_URL}`;
     block.appendChild(nodeUrl);
 
-    if (s.signer && s.signer.currentProvider && s.signer.currentProvider._clientUrl) {
+    if (s.signer && s.signer.currentProvider && (s.signer.currentProvider as any)._clientUrl) {
         const providerUrl = getDiv();
-        providerUrl.innerText = `PROVIDER_URL: ${s.signer.currentProvider._clientUrl}`
+        providerUrl.innerText = `PROVIDER_URL: ${(s.signer.currentProvider as any)._clientUrl}`
         block.appendChild(providerUrl);
     }
+
+    const loginBlock = getDiv();
+    loginBlock.style.margin = "5px";
+    loginBlock.style.padding = "5px";
+    loginBlock.style.border = "solid";
+    block.appendChild(loginBlock);
 
     const loginButton = document.createElement("button") as HTMLButtonElement;
     loginButton.innerText = `Login ${s.name}`;
 
-    block.appendChild(loginButton);
+    loginBlock.appendChild(loginButton);
     var userDataBlock: HTMLDivElement;
 
     loginButton.onclick = () => {
@@ -136,7 +175,7 @@ function drawSignerBlock(s: SignerWithName) {
             userDataBlock.remove();
 
         userDataBlock = getDiv();
-        block.appendChild(userDataBlock);
+        loginBlock.appendChild(userDataBlock);
 
         s.signer.login()
             .then((userData) => {
@@ -155,6 +194,70 @@ function drawSignerBlock(s: SignerWithName) {
                 userDataBlock.appendChild(err);
             })
     }
+
+    const transferBlock = getDiv();
+    transferBlock.style.margin = "5px";
+    transferBlock.style.padding = "5px";
+    transferBlock.style.border = "solid";
+    block.appendChild(transferBlock);
+
+    const transferDefaultParams: TransferArgs = {
+        assetId: "DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn",
+        amount: 101,
+        recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+        fee: 100001,
+        feeAssetId: "WAVES",
+    };
+
+    const transferParamsField = document.createElement("textarea") as HTMLTextAreaElement;
+    transferParamsField.style.width = "300px"
+    transferParamsField.style.height = "150px"
+    transferBlock.appendChild(transferParamsField);
+    transferParamsField.value = JSON.stringify(transferDefaultParams);
+
+    transferBlock.appendChild(getSignerButton("Transfer (type 4)", () => s.signer.transfer(JSON.parse(transferParamsField.value)).broadcast()));
+
+    const invokeBlock = getDiv();
+    invokeBlock.style.margin = "5px";
+    invokeBlock.style.padding = "5px";
+    invokeBlock.style.border = "solid";
+    block.appendChild(invokeBlock);
+
+    const invokeDefaultParams: InvokeArgs = {
+        dApp: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+        fee: 500001,
+        feeAssetId: "WAVES",
+        payment: [
+            {
+                assetId: "WAVES",
+                amount: 1,
+            },
+            {
+                assetId: "25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT",
+                amount: 2,
+            },
+            {
+                assetId: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX",
+                amount: 3,
+            },
+        ],
+        call: {
+            function: "foo",
+            args: [
+                {
+                    type: "string",
+                    value: "Hello, world!",
+                },
+            ],
+        },
+    };
+    const invokeParamField = document.createElement("textarea") as HTMLTextAreaElement;
+    invokeParamField.style.width = "300px"
+    invokeParamField.style.height = "150px"
+    invokeParamField.value = JSON.stringify(invokeDefaultParams);
+
+    invokeBlock.appendChild(invokeParamField);
+    invokeBlock.appendChild(getSignerButton("Invoke (type 16)", () => s.signer.invoke(JSON.parse(invokeParamField.value)).broadcast()));
 }
 
 initSigners();

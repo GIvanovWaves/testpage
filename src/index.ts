@@ -19,17 +19,34 @@ const CONFIG = {
 };
 
 function getDiv(): HTMLDivElement {
-    return document.createElement("div") as HTMLDivElement;
+    return document.createElement("div");
 }
 
-const versionsBlock = getDiv();
-document.body.appendChild(versionsBlock);
-
+const versionsBlock = document.getElementById("versions-block") as HTMLDivElement;
 for (const [k, v] of Object.entries(PackagesFile.dependencies)) {
     const line = getDiv()
     line.innerText = `${k}: ${v}`;
     versionsBlock.appendChild(line);
 }
+
+const configBlock = document.getElementById("config-block") as HTMLDivElement;
+configBlock.style.margin = "15px";
+
+const wxUrlInput = document.getElementById("wx-url-input") as HTMLInputElement;
+const nodeUrlInput = document.getElementById("node-url-input") as HTMLInputElement;
+const keeperNodeUrlInput = document.getElementById("keeper-node-url-input") as HTMLInputElement;
+
+wxUrlInput.value = CONFIG.wxUrl;
+nodeUrlInput.value = CONFIG.nodeUrl;
+keeperNodeUrlInput.value = CONFIG.keeperNodeUrl
+
+const setConfigButton = document.getElementById("set-config-button") as HTMLButtonElement;
+setConfigButton.onclick = () => {
+    CONFIG.wxUrl = wxUrlInput.value;
+    CONFIG.nodeUrl = nodeUrlInput.value;
+    CONFIG.keeperNodeUrl = keeperNodeUrlInput.value;
+    initSigners();
+};
 
 var allSignersBlock = getDiv();
 document.body.appendChild(allSignersBlock);
@@ -100,7 +117,7 @@ function clearAllSignerBlock() {
 
 function getSignerButton(label: string, callback: () => Promise<any>): HTMLDivElement {
     const block = getDiv();
-    const button = document.createElement("button") as HTMLButtonElement;
+    const button = document.createElement("button");
     button.innerText = label;
     block.appendChild(button);
 
@@ -164,7 +181,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     loginBlock.style.border = "solid";
     block.appendChild(loginBlock);
 
-    const loginButton = document.createElement("button") as HTMLButtonElement;
+    const loginButton = document.createElement("button");
     loginButton.innerText = `Login ${s.name}`;
 
     loginBlock.appendChild(loginButton);
@@ -207,9 +224,10 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
         recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 100001,
         feeAssetId: "WAVES",
+        attachment: "foo bar baz",
     };
 
-    const transferParamsField = document.createElement("textarea") as HTMLTextAreaElement;
+    const transferParamsField = document.createElement("textarea");
     transferParamsField.style.width = "300px"
     transferParamsField.style.height = "150px"
     transferBlock.appendChild(transferParamsField);
@@ -251,7 +269,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
             ],
         },
     };
-    const invokeParamField = document.createElement("textarea") as HTMLTextAreaElement;
+    const invokeParamField = document.createElement("textarea");
     invokeParamField.style.width = "300px"
     invokeParamField.style.height = "150px"
     invokeParamField.value = JSON.stringify(invokeDefaultParams);

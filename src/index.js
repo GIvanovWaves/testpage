@@ -19,13 +19,27 @@ const CONFIG = {
 function getDiv() {
     return document.createElement("div");
 }
-const versionsBlock = getDiv();
-document.body.appendChild(versionsBlock);
+const versionsBlock = document.getElementById("versions-block");
 for (const [k, v] of Object.entries(package_json_1.default.dependencies)) {
     const line = getDiv();
     line.innerText = `${k}: ${v}`;
     versionsBlock.appendChild(line);
 }
+const configBlock = document.getElementById("config-block");
+configBlock.style.margin = "15px";
+const wxUrlInput = document.getElementById("wx-url-input");
+const nodeUrlInput = document.getElementById("node-url-input");
+const keeperNodeUrlInput = document.getElementById("keeper-node-url-input");
+wxUrlInput.value = CONFIG.wxUrl;
+nodeUrlInput.value = CONFIG.nodeUrl;
+keeperNodeUrlInput.value = CONFIG.keeperNodeUrl;
+const setConfigButton = document.getElementById("set-config-button");
+setConfigButton.onclick = () => {
+    CONFIG.wxUrl = wxUrlInput.value;
+    CONFIG.nodeUrl = nodeUrlInput.value;
+    CONFIG.keeperNodeUrl = keeperNodeUrlInput.value;
+    initSigners();
+};
 var allSignersBlock = getDiv();
 document.body.appendChild(allSignersBlock);
 function initSigners() {
@@ -175,6 +189,7 @@ function drawSignerBlock(allSignersBlock, s) {
         recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
         fee: 100001,
         feeAssetId: "WAVES",
+        attachment: "foo bar baz",
     };
     const transferParamsField = document.createElement("textarea");
     transferParamsField.style.width = "300px";

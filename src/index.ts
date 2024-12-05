@@ -117,6 +117,7 @@ function clearAllSignerBlock() {
 
 function getSignerButton(label: string, callback: () => Promise<any>): HTMLDivElement {
     const block = getDiv();
+    block.style.padding = "5px";
     const button = document.createElement("button");
     button.innerText = label;
     block.appendChild(button);
@@ -233,6 +234,19 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     transferParamsField.value = JSON.stringify(transferDefaultParams);
 
     transferBlock.appendChild(getSignerButton("Transfer (type 4)", () => s.signer.transfer(JSON.parse(transferParamsField.value)).broadcast()));
+
+    const transferWithAttachmentParams: TransferArgs = {
+        amount: 202,
+        recipient: "3N4ziXSMRverXyxHDUKKMR9MHXnB3TyU3Yh",
+        attachment: "SQHFQMRT97NTco3",
+    }
+
+    const transferWithAttachmentBlock = getDiv();
+    transferWithAttachmentBlock.style.margin = "5px";
+    transferWithAttachmentBlock.style.padding = "5px";
+    transferWithAttachmentBlock.style.border = "solid";
+    block.appendChild(transferWithAttachmentBlock);
+    transferWithAttachmentBlock.appendChild(getSignerButton("Transfer (with attachement)", () => s.signer.transfer(transferWithAttachmentParams).broadcast()));
 
     const invokeBlock = getDiv();
     invokeBlock.style.margin = "5px";

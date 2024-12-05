@@ -5,6 +5,7 @@ import { ProviderKeeper } from "@waves/provider-keeper";
 import { ProviderLedger } from "@waves/provider-ledger";
 import { ProviderMetamask } from "@waves/provider-metamask";
 import { ProviderMailbox } from "@waves.exchange/provider-mailbox";
+import { ProviderTelegram } from "waves-provider-telegram";
 import PackagesFile from './../package.json';
 
 interface SignerWithName {
@@ -101,6 +102,12 @@ function initSigners() {
     });
     signerMailbox.setProvider(new ProviderMailbox(wxUrlObj.origin + "/signer-mailbox"));
     allSigners.push({ signer: signerMailbox, name: "MAILBOX" });
+
+    const signerTelegram = new Signer({
+        NODE_URL: CONFIG.nodeUrl,
+    });
+    signerTelegram.setProvider(new ProviderTelegram());
+    allSigners.push({ signer: signerTelegram, name: "TELEGRAM" });
 
     //Draw provider blocks
     clearAllSignerBlock();

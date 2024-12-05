@@ -10,7 +10,8 @@
     "@waves/provider-keeper": "1.1.1",
     "@waves/provider-ledger": "0.2.1",
     "@waves/provider-metamask": "1.1.6",
-    "@waves/signer": "1.1.0"
+    "@waves/signer": "1.1.0",
+    "waves-provider-telegram": "1.0.11"
   },
   "scripts": {
     "build": "tsc & webpack"

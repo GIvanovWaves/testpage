@@ -10,6 +10,7 @@ const provider_keeper_1 = require("@waves/provider-keeper");
 const provider_ledger_1 = require("@waves/provider-ledger");
 const provider_metamask_1 = require("@waves/provider-metamask");
 const provider_mailbox_1 = require("@waves.exchange/provider-mailbox");
+const waves_provider_telegram_1 = require("waves-provider-telegram");
 const package_json_1 = __importDefault(require("./../package.json"));
 const CONFIG = {
     wxUrl: "https://testnet.wx.network",
@@ -87,6 +88,11 @@ function initSigners() {
     });
     signerMailbox.setProvider(new provider_mailbox_1.ProviderMailbox(wxUrlObj.origin + "/signer-mailbox"));
     allSigners.push({ signer: signerMailbox, name: "MAILBOX" });
+    const signerTelegram = new signer_1.Signer({
+        NODE_URL: CONFIG.nodeUrl,
+    });
+    signerTelegram.setProvider(new waves_provider_telegram_1.ProviderTelegram());
+    allSigners.push({ signer: signerTelegram, name: "TELEGRAM" });
     //Draw provider blocks
     clearAllSignerBlock();
     for (const signer of allSigners) {

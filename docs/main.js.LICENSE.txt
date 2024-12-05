@@ -17,6 +17,8 @@ object-assign
  * @license  MIT
  */
 
+/*! #__NO_SIDE_EFFECTS__ */
+
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -33,6 +35,8 @@ PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! js-cookie v3.0.5 | MIT */
 
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
@@ -51,6 +55,36 @@ PERFORMANCE OF THIS SOFTWARE.
  * @copyright Chen, Yi-Cyuan 2015-2018
  * @license MIT
  */
+
+/**
+* @vue/compiler-core v3.5.13
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/
+
+/**
+* @vue/runtime-core v3.5.13
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/
+
+/**
+* @vue/runtime-dom v3.5.13
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/
+
+/**
+* @vue/shared v3.5.13
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/
+
+/**
+* vue v3.5.13
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/
 
 /** @license React v0.19.1
  * scheduler.production.min.js

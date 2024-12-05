@@ -38,6 +38,8 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /*! js-cookie v3.0.5 | MIT */
 
+/*! scure-base - MIT License (c) 2022 Paul Miller (paulmillr.com) */
+
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *

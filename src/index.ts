@@ -253,7 +253,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     transferWithAttachmentBlock.style.padding = "5px";
     transferWithAttachmentBlock.style.border = "solid";
     block.appendChild(transferWithAttachmentBlock);
-    transferWithAttachmentBlock.appendChild(getSignerButton("Transfer (with attachement)", () => s.signer.transfer(transferWithAttachmentParams).broadcast()));
+    transferWithAttachmentBlock.appendChild(getSignerButton("Transfer (with attachment)", () => s.signer.transfer(transferWithAttachmentParams).broadcast()));
 
     const invokeBlock = getDiv();
     invokeBlock.style.margin = "5px";
@@ -290,12 +290,52 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
         },
     };
     const invokeParamField = document.createElement("textarea");
-    invokeParamField.style.width = "300px"
-    invokeParamField.style.height = "150px"
+    invokeParamField.style.width = "300px";
+    invokeParamField.style.height = "150px";
     invokeParamField.value = JSON.stringify(invokeDefaultParams);
 
     invokeBlock.appendChild(invokeParamField);
     invokeBlock.appendChild(getSignerButton("Invoke (type 16)", () => s.signer.invoke(JSON.parse(invokeParamField.value)).broadcast()));
+
+    const anyTxBlock = getDiv();
+    anyTxBlock.style.margin = "5px";
+    anyTxBlock.style.padding = "5px";
+    anyTxBlock.style.border = "solid";
+    block.appendChild(anyTxBlock);
+
+    const anyTxDataTextArea = document.createElement("textarea");
+    anyTxDataTextArea.style.width = "300px";
+    anyTxDataTextArea.style.height = "150px";
+    anyTxBlock.appendChild(anyTxDataTextArea);
+
+    function anyTxFunction(): Promise<any> {
+        let txJson = JSON.parse(anyTxDataTextArea.value) as any;
+        let txData;
+
+        if (txJson.type == 3) txData = s.signer.issue(txJson);
+        if (txJson.type == 4) txData = s.signer.transfer(txJson);
+        if (txJson.type == 5) txData = s.signer.reissue(txJson);
+        if (txJson.type == 6) txData = s.signer.burn(txJson);
+        if (txJson.type == 7) txData = s.signer.exchange(txJson);
+        if (txJson.type == 8) txData = s.signer.lease(txJson);
+        if (txJson.type == 9) txData = s.signer.cancelLease(txJson);
+        if (txJson.type == 10) txData = s.signer.alias(txJson);
+        if (txJson.type == 11) txData = s.signer.massTransfer(txJson);
+        if (txJson.type == 12) txData = s.signer.data(txJson);
+        if (txJson.type == 13) txData = s.signer.setScript(txJson);
+        if (txJson.type == 14) txData = s.signer.sponsorship(txJson);
+        if (txJson.type == 15) txData = s.signer.setAssetScript(txJson);
+        if (txJson.type == 16) txData = s.signer.invoke(txJson);
+
+        if (txData) {
+            return txData.broadcast();
+        } else {
+            console.error(`TYPE: ${txJson.type} is not supported`);
+            return new Promise(() => { });
+        }
+    }
+
+    anyTxBlock.appendChild(getSignerButton("Sign&Broadcast", () => anyTxFunction()));
 }
 
 initSigners();

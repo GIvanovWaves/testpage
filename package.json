@@ -1,6 +1,6 @@
 {
   "name": "testpage",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -9,9 +9,9 @@
     "@waves.exchange/provider-web": "1.4.0",
     "@waves/provider-keeper": "2.0.9",
     "@waves/provider-ledger": "0.2.1",
-    "@waves/provider-metamask": "1.1.6",
+    "@waves/provider-metamask": "1.1.7",
     "@waves/signer": "1.1.0",
-    "waves-provider-telegram": "1.0.11"
+    "waves-provider-telegram": "1.0.12"
   },
   "scripts": {
     "build": "tsc & webpack"

@@ -1,4 +1,4 @@
-import { InvokeArgs, Signer, TransferArgs } from "@waves/signer";
+import { InvokeArgs, Provider, Signer, TransferArgs } from "waves-signer-test";
 import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
@@ -336,6 +336,35 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     }
 
     anyTxBlock.appendChild(getSignerButton("Sign&Broadcast", () => anyTxFunction()));
+
+    const orderBlock = getDiv();
+    orderBlock.style.margin = "5px";
+    orderBlock.style.padding = "5px";
+    orderBlock.style.border = "solid";
+    block.appendChild(orderBlock);
+
+    const orderDefaultParams = {
+        orderType: 'sell',
+        version: 4,
+        assetPair: {
+            amountAsset: '8KTfWNoWYf9bP3hg1QYBLpkk9tgRb5wiUZnT1HUiNa9r',
+            priceAsset: 'WAVES',
+        },
+        price: 100000,
+        amount: 100000,
+        timestamp: 1634563969123,
+        expiration: 1637069590926,
+        matcherFee: 300000,
+        matcherFeeAssetId: null,
+    };
+    const orderParamField = document.createElement("textarea");
+    orderParamField.style.width = "300px";
+    orderParamField.style.height = "150px";
+    orderParamField.value = JSON.stringify(orderDefaultParams);
+
+    orderBlock.appendChild(orderParamField);
+    orderBlock.appendChild(getSignerButton("Invoke (Order)", () => s.signer.signOrder(JSON.parse(orderParamField.value))));
+
 }
 
 initSigners();

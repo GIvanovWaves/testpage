@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const signer_1 = require("@waves/signer");
+const waves_signer_test_1 = require("waves-signer-test");
 const provider_web_1 = require("@waves.exchange/provider-web");
 const provider_cloud_1 = require("@waves.exchange/provider-cloud");
 const provider_keeper_1 = require("@waves/provider-keeper");
@@ -47,31 +47,31 @@ function initSigners() {
     const allSigners = [];
     var wxUrlObj = new URL(CONFIG.wxUrl);
     //ProviderWEB
-    const signerWeb = new signer_1.Signer({
+    const signerWeb = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.nodeUrl,
     });
     signerWeb.setProvider(new provider_web_1.ProviderWeb(wxUrlObj.origin + "/signer"));
     allSigners.push({ signer: signerWeb, name: "WEB" });
     //ProviderCLOUD
-    const signerCloud = new signer_1.Signer({
+    const signerCloud = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.nodeUrl,
     });
     signerCloud.setProvider(new provider_cloud_1.ProviderCloud(wxUrlObj.origin + "/signer-cloud" + wxUrlObj.search));
     allSigners.push({ signer: signerCloud, name: "CLOUD(EMAIL)" });
     //ProviderKeeper
-    const signerKeeper = new signer_1.Signer({
+    const signerKeeper = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.keeperNodeUrl,
     });
     signerKeeper.setProvider(new provider_keeper_1.ProviderKeeper());
     allSigners.push({ signer: signerKeeper, name: "KEEPER" });
     //ProviderLedger
-    const signerLedger = new signer_1.Signer({
+    const signerLedger = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.nodeUrl,
     });
     signerLedger.setProvider(new provider_ledger_1.ProviderLedger());
     allSigners.push({ signer: signerLedger, name: "LEDGER" });
     //ProviderMetamask
-    const signerMetamask = new signer_1.Signer({
+    const signerMetamask = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.nodeUrl,
     });
     try {
@@ -83,12 +83,12 @@ function initSigners() {
     }
     allSigners.push({ signer: signerMetamask, name: "METAMASK" });
     //ProviderMailbox
-    const signerMailbox = new signer_1.Signer({
+    const signerMailbox = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.nodeUrl,
     });
     signerMailbox.setProvider(new provider_mailbox_1.ProviderMailbox(wxUrlObj.origin + "/signer-mailbox"));
     allSigners.push({ signer: signerMailbox, name: "MAILBOX" });
-    const signerTelegram = new signer_1.Signer({
+    const signerTelegram = new waves_signer_test_1.Signer({
         NODE_URL: CONFIG.nodeUrl,
     });
     signerTelegram.setProvider(new waves_provider_telegram_1.ProviderTelegram());
@@ -302,5 +302,30 @@ function drawSignerBlock(allSignersBlock, s) {
         }
     }
     anyTxBlock.appendChild(getSignerButton("Sign&Broadcast", () => anyTxFunction()));
+    const orderBlock = getDiv();
+    orderBlock.style.margin = "5px";
+    orderBlock.style.padding = "5px";
+    orderBlock.style.border = "solid";
+    block.appendChild(orderBlock);
+    const orderDefaultParams = {
+        orderType: 'sell',
+        version: 4,
+        assetPair: {
+            amountAsset: '8KTfWNoWYf9bP3hg1QYBLpkk9tgRb5wiUZnT1HUiNa9r',
+            priceAsset: 'WAVES',
+        },
+        price: 100000,
+        amount: 100000,
+        timestamp: 1634563969123,
+        expiration: 1637069590926,
+        matcherFee: 300000,
+        matcherFeeAssetId: null,
+    };
+    const orderParamField = document.createElement("textarea");
+    orderParamField.style.width = "300px";
+    orderParamField.style.height = "150px";
+    orderParamField.value = JSON.stringify(orderDefaultParams);
+    orderBlock.appendChild(orderParamField);
+    orderBlock.appendChild(getSignerButton("Invoke (Order)", () => s.signer.signOrder(JSON.parse(orderParamField.value))));
 }
 initSigners();

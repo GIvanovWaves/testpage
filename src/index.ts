@@ -151,6 +151,7 @@ function getSignerButton(label: string, callback: () => Promise<any>): HTMLDivEl
             .catch((rej) => {
                 output.style.color = "red";
                 output.innerText = rej.message ? rej.message.toString() : rej.toString();
+                console.log(rej);
             })
     };
 

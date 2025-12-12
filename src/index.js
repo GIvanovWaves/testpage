@@ -130,6 +130,7 @@ function getSignerButton(label, callback) {
             .catch((rej) => {
             output.style.color = "red";
             output.innerText = rej.message ? rej.message.toString() : rej.toString();
+            console.log(rej);
         });
     };
     return block;

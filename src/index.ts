@@ -364,7 +364,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     orderParamField.value = JSON.stringify(orderDefaultParams);
 
     orderBlock.appendChild(orderParamField);
-    orderBlock.appendChild(getSignerButton("Invoke (Order)", () => s.signer.signOrder(JSON.parse(orderParamField.value))));
+    orderBlock.appendChild(getSignerButton("Sign Order", () => s.signer.signOrder(JSON.parse(orderParamField.value))));
 
 }
 

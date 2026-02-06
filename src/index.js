@@ -313,7 +313,7 @@ function drawSignerBlock(allSignersBlock, s) {
         version: 4,
         assetPair: {
             amountAsset: '8KTfWNoWYf9bP3hg1QYBLpkk9tgRb5wiUZnT1HUiNa9r',
-            priceAsset: 'WAVES',
+            priceAsset: null,
         },
         price: 100000,
         amount: 100000,

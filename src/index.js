@@ -119,17 +119,18 @@ function getSignerButton(label, callback) {
             var status_text = "";
             if (Array.isArray(res)) {
                 for (var tx of res) {
-                    status_text += tx.id.toString() + "\n";
+                    status_text += JSON.stringify(tx) + "\n";
                 }
             }
             else {
-                status_text = res.id.toString() + "\n";
+                status_text = JSON.stringify(res) + "\n";
             }
             output.innerText = status_text;
+            console.log(res);
         })
             .catch((rej) => {
             output.style.color = "red";
-            output.innerText = rej.message ? rej.message.toString() : rej.toString();
+            output.innerText = rej.message ? rej.message.toString() : JSON.stringify(rej);
             console.log(rej);
         });
     };
@@ -321,6 +322,7 @@ function drawSignerBlock(allSignersBlock, s) {
         expiration: 1637069590926,
         matcherFee: 300000,
         matcherFeeAssetId: null,
+        matcherPublicKey: 'FB5ErjREo817duEBBQUqUdkgoPctQJEYuG3mU7w3AYjc',
     };
     const orderParamField = document.createElement("textarea");
     orderParamField.style.width = "300px";

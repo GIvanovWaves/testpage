@@ -122,7 +122,7 @@ function clearAllSignerBlock() {
     document.body.appendChild(allSignersBlock);
 }
 
-function getSignerButton(label: string, callback: () => Promise<any>): HTMLDivElement {
+function getSignerButton(label: string, callback: () => Promise<any>, isBroadcast: boolean): HTMLDivElement {
     const block = getDiv();
     block.style.padding = "5px";
     const button = document.createElement("button");
@@ -140,10 +140,11 @@ function getSignerButton(label: string, callback: () => Promise<any>): HTMLDivEl
                 var status_text = "";
                 if (Array.isArray(res)) {
                     for (var tx of res) {
-                        status_text += JSON.stringify(tx) + "\n";
+                        status_text += isBroadcast ? tx.id.toString() : JSON.stringify(tx);
+                        status_text += "\n";
                     }
                 } else {
-                    status_text = JSON.stringify(res) + "\n";
+                    status_text = isBroadcast ? res.id.toString() : JSON.stringify(res);
                 }
 
                 output.innerText = status_text;
@@ -243,7 +244,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     transferBlock.appendChild(transferParamsField);
     transferParamsField.value = JSON.stringify(transferDefaultParams);
 
-    transferBlock.appendChild(getSignerButton("Transfer (type 4)", () => s.signer.transfer(JSON.parse(transferParamsField.value)).broadcast()));
+    transferBlock.appendChild(getSignerButton("Transfer (type 4)", () => s.signer.transfer(JSON.parse(transferParamsField.value)).broadcast(), true));
 
     const transferWithAttachmentParams: TransferArgs = {
         amount: 202,
@@ -256,7 +257,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     transferWithAttachmentBlock.style.padding = "5px";
     transferWithAttachmentBlock.style.border = "solid";
     block.appendChild(transferWithAttachmentBlock);
-    transferWithAttachmentBlock.appendChild(getSignerButton("Transfer (with attachment)", () => s.signer.transfer(transferWithAttachmentParams).broadcast()));
+    transferWithAttachmentBlock.appendChild(getSignerButton("Transfer (with attachment)", () => s.signer.transfer(transferWithAttachmentParams).broadcast(), true));
 
     const invokeBlock = getDiv();
     invokeBlock.style.margin = "5px";
@@ -298,7 +299,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     invokeParamField.value = JSON.stringify(invokeDefaultParams);
 
     invokeBlock.appendChild(invokeParamField);
-    invokeBlock.appendChild(getSignerButton("Invoke (type 16)", () => s.signer.invoke(JSON.parse(invokeParamField.value)).broadcast()));
+    invokeBlock.appendChild(getSignerButton("Invoke (type 16)", () => s.signer.invoke(JSON.parse(invokeParamField.value)).broadcast(), true));
 
     const anyTxBlock = getDiv();
     anyTxBlock.style.margin = "5px";
@@ -338,7 +339,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
         }
     }
 
-    anyTxBlock.appendChild(getSignerButton("Sign&Broadcast", () => anyTxFunction()));
+    anyTxBlock.appendChild(getSignerButton("Sign&Broadcast", () => anyTxFunction(), true));
 
     const orderBlock = getDiv();
     orderBlock.style.margin = "5px";
@@ -367,8 +368,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
     orderParamField.value = JSON.stringify(orderDefaultParams);
 
     orderBlock.appendChild(orderParamField);
-    orderBlock.appendChild(getSignerButton("Sign Order", () => s.signer.signOrder(JSON.parse(orderParamField.value))));
-
+    orderBlock.appendChild(getSignerButton("Sign Order", () => s.signer.signOrder(JSON.parse(orderParamField.value)), false));
 }
 
 initSigners();

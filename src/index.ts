@@ -6,6 +6,7 @@ import { ProviderLedger } from "@waves/provider-ledger";
 import { ProviderMetamask } from "@waves/provider-metamask";
 import { ProviderMailbox } from "@waves.exchange/provider-mailbox";
 import { ProviderTelegram } from "waves-provider-telegram";
+import { TRANSACTION_TYPE } from "@waves/ts-types";
 import PackagesFile from './../package.json';
 
 interface SignerWithName {
@@ -318,20 +319,22 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
         let txJson = JSON.parse(anyTxDataTextArea.value) as any;
         let txData;
 
-        if (txJson.type == 3) txData = s.signer.issue(txJson);
-        if (txJson.type == 4) txData = s.signer.transfer(txJson);
-        if (txJson.type == 5) txData = s.signer.reissue(txJson);
-        if (txJson.type == 6) txData = s.signer.burn(txJson);
-        if (txJson.type == 7) txData = s.signer.exchange(txJson);
-        if (txJson.type == 8) txData = s.signer.lease(txJson);
-        if (txJson.type == 9) txData = s.signer.cancelLease(txJson);
-        if (txJson.type == 10) txData = s.signer.alias(txJson);
-        if (txJson.type == 11) txData = s.signer.massTransfer(txJson);
-        if (txJson.type == 12) txData = s.signer.data(txJson);
-        if (txJson.type == 13) txData = s.signer.setScript(txJson);
-        if (txJson.type == 14) txData = s.signer.sponsorship(txJson);
-        if (txJson.type == 15) txData = s.signer.setAssetScript(txJson);
-        if (txJson.type == 16) txData = s.signer.invoke(txJson);
+        switch (txJson.type) {
+            case TRANSACTION_TYPE.ISSUE:            txData = s.signer.issue(txJson); break;
+            case TRANSACTION_TYPE.TRANSFER:         txData = s.signer.transfer(txJson); break;
+            case TRANSACTION_TYPE.REISSUE:          txData = s.signer.reissue(txJson); break;
+            case TRANSACTION_TYPE.BURN:             txData = s.signer.burn(txJson); break;
+            case TRANSACTION_TYPE.EXCHANGE:         txData = s.signer.exchange(txJson); break;
+            case TRANSACTION_TYPE.LEASE:            txData = s.signer.lease(txJson); break;
+            case TRANSACTION_TYPE.CANCEL_LEASE:     txData = s.signer.cancelLease(txJson); break;
+            case TRANSACTION_TYPE.ALIAS:            txData = s.signer.alias(txJson); break;
+            case TRANSACTION_TYPE.MASS_TRANSFER:    txData = s.signer.massTransfer(txJson); break;
+            case TRANSACTION_TYPE.DATA:             txData = s.signer.data(txJson); break;
+            case TRANSACTION_TYPE.SET_SCRIPT:       txData = s.signer.setScript(txJson); break;
+            case TRANSACTION_TYPE.SPONSORSHIP:      txData = s.signer.sponsorship(txJson); break;
+            case TRANSACTION_TYPE.SET_ASSET_SCRIPT: txData = s.signer.setAssetScript(txJson); break;
+            case TRANSACTION_TYPE.INVOKE_SCRIPT:    txData = s.signer.invoke(txJson); break;
+        }
 
         if (txData) {
             return txData.broadcast();

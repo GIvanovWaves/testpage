@@ -1,4 +1,4 @@
-import { InvokeArgs, Provider, Signer, TransferArgs } from "waves-signer-test";
+import { InvokeArgs, Signer, TransferArgs } from "@waves/signer";
 import { ProviderWeb } from "@waves.exchange/provider-web";
 import { ProviderCloud } from "@waves.exchange/provider-cloud";
 import { ProviderKeeper } from "@waves/provider-keeper";
@@ -36,6 +36,7 @@ configBlock.style.margin = "15px";
 const wxUrlInput = document.getElementById("wx-url-input") as HTMLInputElement;
 const nodeUrlInput = document.getElementById("node-url-input") as HTMLInputElement;
 const keeperNodeUrlInput = document.getElementById("keeper-node-url-input") as HTMLInputElement;
+const signerTypeProd = document.getElementById("signer-type-prod") as HTMLInputElement;
 
 wxUrlInput.value = CONFIG.wxUrl;
 nodeUrlInput.value = CONFIG.nodeUrl;
@@ -55,6 +56,7 @@ document.body.appendChild(allSignersBlock);
 function initSigners() {
     const allSigners: SignerWithName[] = [];
     var wxUrlObj = new URL(CONFIG.wxUrl);
+    const Signer = signerTypeProd.checked ? require("@waves/signer").Signer : require("waves-signer-test").Signer
 
     //ProviderWEB
     const signerWeb = new Signer({
@@ -351,7 +353,7 @@ function drawSignerBlock(allSignersBlock: HTMLElement, s: SignerWithName) {
         orderType: 'sell',
         version: 4,
         assetPair: {
-            amountAsset: '8KTfWNoWYf9bP3hg1QYBLpkk9tgRb5wiUZnT1HUiNa9r',
+            amountAsset: '25FEqEjRkqK6yCkiT7Lz6SAYz7gUFCtxfCChnrVFD5AT',
             priceAsset: null,
         },
         price: 100000,

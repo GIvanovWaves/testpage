@@ -22,6 +22,19 @@
             <label>KEEPER_NODE_URL:</label>
             <input id="keeper-node-url-input" style="width: 300px"></input>
         </div>
+        <div>
+            <fieldset style="width: 300px">
+                <legend>SIGNER:</legend>
+                <div>
+                    <input id="signer-type-prod" type="radio" name="signer-type"></input>
+                    <label for="signer-type-prod">@waves/signer</label>
+                </div>
+                <div>
+                    <input id="signer-type-test" type="radio" name="signer-type" checked></input>
+                    <label for="signer-type-test">waves-signer-test</label>
+                </div>
+            </fieldset>
+        </div>
         <button id="set-config-button">Set</button>
     </div>
     <script src="./main.js"></script>
